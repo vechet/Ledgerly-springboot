@@ -1,0 +1,26 @@
+[INFO ] 2025-08-27 15:16:44.185 - c.v.Ledgerly.LedgerlyApplication.logStarting - Starting LedgerlyApplication using Java 17.0.13 with PID 18200 (D:\Projects\Spring\Ledgerly\target\classes started by vechet.chuo in D:\Projects\Spring\Ledgerly)
+[INFO ] 2025-08-27 15:16:44.191 - c.v.Ledgerly.LedgerlyApplication.logStartupProfileInfo - No active profile set, falling back to 1 default profile: "default"
+[INFO ] 2025-08-27 15:16:45.640 - o.s.b.w.e.tomcat.TomcatWebServer.initialize - Tomcat initialized with port 8099 (http)
+[INFO ] 2025-08-27 15:16:45.654 - o.a.catalina.core.StandardService.log - Starting service [Tomcat]
+[INFO ] 2025-08-27 15:16:45.655 - o.a.catalina.core.StandardEngine.log - Starting Servlet engine: [Apache Tomcat/10.1.44]
+[INFO ] 2025-08-27 15:16:45.722 - o.a.c.c.C.[Tomcat].[localhost].[/].log - Initializing Spring embedded WebApplicationContext
+[INFO ] 2025-08-27 15:16:45.724 - o.s.b.w.s.c.ServletWebServerApplicationContext.prepareWebApplicationContext - Root WebApplicationContext: initialization completed in 1436 ms
+[INFO ] 2025-08-27 15:16:46.227 - o.s.b.w.e.tomcat.TomcatWebServer.start - Tomcat started on port 8099 (http) with context path '/'
+[INFO ] 2025-08-27 15:16:46.237 - c.v.Ledgerly.LedgerlyApplication.logStarted - Started LedgerlyApplication in 2.835 seconds (process running for 3.258)
+[INFO ] 2025-08-27 15:17:07.543 - o.s.b.w.e.tomcat.GracefulShutdown.shutDownGracefully - Commencing graceful shutdown. Waiting for active requests to complete
+[INFO ] 2025-08-27 15:17:08.235 - o.s.b.w.e.tomcat.GracefulShutdown.doShutdown - Graceful shutdown complete
+[INFO ] 2025-08-27 15:20:56.909 - c.v.Ledgerly.LedgerlyApplication.logStarting - Starting LedgerlyApplication using Java 17.0.13 with PID 14848 (D:\Projects\Spring\Ledgerly\target\classes started by vechet.chuo in D:\Projects\Spring\Ledgerly)
+[INFO ] 2025-08-27 15:20:56.912 - c.v.Ledgerly.LedgerlyApplication.logStartupProfileInfo - No active profile set, falling back to 1 default profile: "default"
+[INFO ] 2025-08-27 15:20:58.514 - o.s.b.w.e.tomcat.TomcatWebServer.initialize - Tomcat initialized with port 8099 (http)
+[INFO ] 2025-08-27 15:20:58.540 - o.a.catalina.core.StandardService.log - Starting service [Tomcat]
+[INFO ] 2025-08-27 15:20:58.540 - o.a.catalina.core.StandardEngine.log - Starting Servlet engine: [Apache Tomcat/10.1.44]
+[INFO ] 2025-08-27 15:20:58.680 - o.a.c.c.C.[Tomcat].[localhost].[/].log - Initializing Spring embedded WebApplicationContext
+[INFO ] 2025-08-27 15:20:58.682 - o.s.b.w.s.c.ServletWebServerApplicationContext.prepareWebApplicationContext - Root WebApplicationContext: initialization completed in 1694 ms
+[INFO ] 2025-08-27 15:20:59.336 - o.s.b.w.e.tomcat.TomcatWebServer.start - Tomcat started on port 8099 (http) with context path '/'
+[INFO ] 2025-08-27 15:20:59.347 - c.v.Ledgerly.LedgerlyApplication.logStarted - Started LedgerlyApplication in 3.221 seconds (process running for 3.621)
+[INFO ] 2025-08-27 15:21:52.046 - o.a.c.c.C.[Tomcat].[localhost].[/].log - Initializing Spring DispatcherServlet 'dispatcherServlet'
+[INFO ] 2025-08-27 15:21:52.047 - o.s.web.servlet.DispatcherServlet.initServletBean - Initializing Servlet 'dispatcherServlet'
+[INFO ] 2025-08-27 15:21:52.049 - o.s.web.servlet.DispatcherServlet.initServletBean - Completed initialization in 1 ms
+[INFO ] 2025-08-27 15:21:52.254 - c.v.Ledgerly.services.AccountService.getAccount - Request: {"id":7}
+[INFO ] 2025-08-27 15:22:14.184 - o.s.b.w.e.tomcat.GracefulShutdown.shutDownGracefully - Commencing graceful shutdown. Waiting for active requests to complete
+[INFO ] 2025-08-27 15:22:14.434 - o.s.b.w.e.tomcat.GracefulShutdown.doShutdown - Graceful shutdown complete
