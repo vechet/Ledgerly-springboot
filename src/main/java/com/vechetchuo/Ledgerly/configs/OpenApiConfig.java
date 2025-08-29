@@ -26,7 +26,7 @@ public class OpenApiConfig {
 
         return new OpenAPI()
                 .info(new Info()
-                        .title("Inventory")
+                        .title("Ledgerly")
                         .version("1.0"))
                 .addSecurityItem(securityRequirement)
                 .components(new io.swagger.v3.oas.models.Components()
