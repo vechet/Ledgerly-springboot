@@ -27,19 +27,19 @@ public class Account {
     @Column(name = "currency", nullable = false, length = 100)
     private String currency;
 
-    @Column(name = "user_id", nullable = false)
-    private int userId;
+    @Column(name = "user_id", nullable = false, length = 100)
+    private String userId;
 
     @Column(name = "memo", length = 500)
     private String memo;
 
-    @Column(name = "created_by", nullable = false, length = 450)
+    @Column(name = "created_by", nullable = false, length = 100)
     private String createdBy;
 
     @Column(name = "created_date", nullable = false)
     private LocalDateTime createdDate;
 
-    @Column(name = "modified_by", length = 450)
+    @Column(name = "modified_by", length = 100)
     private String modifiedBy;
 
     @Column(name = "modified_date")

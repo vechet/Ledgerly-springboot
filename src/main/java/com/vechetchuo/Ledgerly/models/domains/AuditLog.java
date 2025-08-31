@@ -34,7 +34,7 @@ public class AuditLog {
     @Column(name = "description", nullable = false)
     private String Description;
 
-    @Column(name = "created_by", nullable = false, length = 450)
+    @Column(name = "created_by", nullable = false, length = 100)
     private String createdBy;
 
     @Column(name = "created_date", nullable = false)
