@@ -3,6 +3,7 @@ package com.vechetchuo.Ledgerly.mappings;
 import com.vechetchuo.Ledgerly.models.domains.Account;
 import com.vechetchuo.Ledgerly.models.dtos.account.*;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface AccountMapper {
@@ -19,5 +20,7 @@ public interface AccountMapper {
     Account toDeleteEntity(DeleteAccountRequest dto);
     DeleteAccountResponse toDeleteDto(Account entity);
 
+    @Mapping(source = "globalParam.id", target = "statusId")
+    @Mapping(source = "globalParam.name", target = "statusName")
     RecordAuditLogAccount toAuditLogDto(Account entity);
 }

@@ -31,7 +31,7 @@ public class AuditLog {
     @Column(name = "transaction_no", nullable = false, length = 100)
     private String transactionNo;
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description", columnDefinition = "TEXT", nullable = false)
     private String Description;
 
     @Column(name = "created_by", nullable = false, length = 100)

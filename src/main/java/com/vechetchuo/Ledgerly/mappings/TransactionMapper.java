@@ -4,21 +4,44 @@ import com.vechetchuo.Ledgerly.models.domains.Transaction;
 import com.vechetchuo.Ledgerly.models.dtos.account.*;
 import com.vechetchuo.Ledgerly.models.dtos.transaction.*;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface TransactionMapper {
+    @Mapping(source = "account.id", target = "accountId")
+    @Mapping(source = "account.name", target = "accountName")
+    @Mapping(source = "category.id", target = "categoryId")
+    @Mapping(source = "category.name", target = "categoryName")
     GetTransactionResponse toGetDto(Transaction entity);
 
+    @Mapping(source = "account.id", target = "accountId")
+    @Mapping(source = "account.name", target = "accountName")
+    @Mapping(source = "category.id", target = "categoryId")
+    @Mapping(source = "category.name", target = "categoryName")
     TransactionsResponse toGetsDto(Transaction entity);
 
     Transaction toCreateEntity(CreateTransactionRequest dto);
+    @Mapping(source = "account.id", target = "accountId")
+    @Mapping(source = "account.name", target = "accountName")
+    @Mapping(source = "category.id", target = "categoryId")
+    @Mapping(source = "category.name", target = "categoryName")
     CreateTransactionResponse toCreateDto(Transaction entity);
 
     Transaction toUpdateEntity(UpdateTransactionRequest dto);
+    @Mapping(source = "account.id", target = "accountId")
+    @Mapping(source = "account.name", target = "accountName")
+    @Mapping(source = "category.id", target = "categoryId")
+    @Mapping(source = "category.name", target = "categoryName")
     UpdateTransactionResponse toUpdateDto(Transaction entity);
 
     Transaction toDeleteEntity(DeleteTransactionRequest dto);
     DeleteTransactionResponse toDeleteDto(Transaction entity);
 
+    @Mapping(source = "account.id", target = "accountId")
+    @Mapping(source = "account.name", target = "accountName")
+    @Mapping(source = "category.id", target = "categoryId")
+    @Mapping(source = "category.name", target = "categoryName")
+    @Mapping(source = "globalParam.id", target = "statusId")
+    @Mapping(source = "globalParam.name", target = "statusName")
     RecordAuditLogTransaction toAuditLogDto(Transaction entity);
 }

@@ -13,8 +13,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class CreateTransactionResponse {
     private int id;
-    private Integer accountId;
-    private Integer categoryId;
+    private int accountId;
+    private String accountName;
+    private int categoryId;
+    private String categoryName;
     private BigDecimal amount;
     private LocalDateTime transactionDate;
     private String memo;
