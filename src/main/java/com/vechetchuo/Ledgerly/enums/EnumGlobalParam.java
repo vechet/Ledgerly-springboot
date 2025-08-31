@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum EnumGlobalParam {
-    Deleted("Normal"),
+    Deleted("Deleted"),
     Normal("Normal");
 
     private final String message;
