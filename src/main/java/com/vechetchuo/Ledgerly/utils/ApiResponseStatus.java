@@ -8,7 +8,8 @@ public enum ApiResponseStatus {
     BAD_REQUEST(400, "Bad Request"),
     SUCCESS(0, "Success"),
     NOT_FOUND(404, "Not Found"),
-    UNAUTHORIZED(401, "Unauthorized");
+    UNAUTHORIZED(401, "Unauthorized"),
+    ALREADY_DELETE(422, "Cannot update or delete record that already deleted.");
 
     private final int code;
     private final String message;

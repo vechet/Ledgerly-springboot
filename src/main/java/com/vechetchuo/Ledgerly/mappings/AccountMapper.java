@@ -8,6 +8,8 @@ import org.mapstruct.Mapper;
 public interface AccountMapper {
     GetAccountResponse toGetDto(Account entity);
 
+    AccountsResponse toGetsDto(Account entity);
+
     Account toCreateEntity(CreateAccountRequest dto);
     CreateAccountResponse toCreateDto(Account entity);
 
@@ -16,4 +18,6 @@ public interface AccountMapper {
 
     Account toDeleteEntity(DeleteAccountRequest dto);
     DeleteAccountResponse toDeleteDto(Account entity);
+
+    RecordAuditLogAccount toAuditLogDto(Account entity);
 }

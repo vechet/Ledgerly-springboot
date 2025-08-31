@@ -3,18 +3,18 @@ package com.vechetchuo.Ledgerly.services;
 import com.vechetchuo.Ledgerly.enums.EnumGlobalParam;
 import com.vechetchuo.Ledgerly.enums.EnumGlobalParamType;
 import com.vechetchuo.Ledgerly.mappings.AccountMapper;
+import com.vechetchuo.Ledgerly.models.domains.Account;
 import com.vechetchuo.Ledgerly.models.domains.AuditLog;
 import com.vechetchuo.Ledgerly.models.dtos.account.*;
 import com.vechetchuo.Ledgerly.repositories.AccountRepository;
 import com.vechetchuo.Ledgerly.repositories.AuditLogRepository;
 import com.vechetchuo.Ledgerly.repositories.GlobalParamRepository;
-import com.vechetchuo.Ledgerly.utils.ApiResponse;
-import com.vechetchuo.Ledgerly.utils.ApiResponseStatus;
-import com.vechetchuo.Ledgerly.utils.JsonConverterUtils;
-import com.vechetchuo.Ledgerly.utils.LoggerUtil;
+import com.vechetchuo.Ledgerly.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,9 +56,20 @@ public class AccountService {
         }
     }
 
-    public ApiResponse<GetAccountsResponse> getAccounts(GetAccountsRequest req){
-        logger.info(LoggerUtil.formatMessage("Request", req));
-        return ApiResponse.success(null);
+    public ApiResponse<GetAccountsResponse> getAccounts(PaginationRequest req){
+        try{
+            PageRequest pageRequest = PaginationUtil.toPageRequest(req);
+            Page<Account> accountPage = accountRepository.findDynamic(req.getFilter().getSearch(), pageRequest);
+            var accounts = accountPage.getContent().stream().map(mapper::toGetsDto).toList();
+            var pageInfo = new PageInfo(req.getPage(), req.getPageSize(), accountPage.getTotalPages(), accountPage.getTotalElements());
+
+            // Response
+            var res = new GetAccountsResponse(accounts, pageInfo);
+            return ApiResponse.success(res);
+        }catch (Exception e){
+            logger.info(LoggerUtil.formatMessage(req, e.hashCode(), e.getMessage()));
+            return ApiResponse.failure(ApiResponseStatus.INTERNAL_ERROR);
+        }
     }
 
     @Transactional
@@ -66,9 +77,12 @@ public class AccountService {
         try{
             //get userId
 
+            // get status
+            var status = globalParamRepository.findStatusByKeyNameAndType(EnumGlobalParam.Normal.getMessage(), EnumGlobalParamType.AccountxxxStatus.getMessage());
+
             // mapping dto to entity
             var newAccount = mapper.toCreateEntity(req);
-            newAccount.setGlobalParam(globalParamRepository.findStatusByKeyNameAndType(EnumGlobalParam.Normal.getMessage(), EnumGlobalParamType.AccountxxxStatus.getMessage()));
+            newAccount.setGlobalParam(status);
             newAccount.setUserId("1");
             newAccount.setCreatedBy("1");
             newAccount.setCreatedDate(LocalDateTime.now());
@@ -108,6 +122,16 @@ public class AccountService {
             if (currentAccount == null) {
                 logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.NOT_FOUND));
                 return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
+            }
+
+            // get status
+            var status = globalParamRepository.findStatusByKeyNameAndType(EnumGlobalParam.Deleted.getMessage(), EnumGlobalParamType.AccountxxxStatus.getMessage());
+
+            // Check if the account record is already deleted
+            if (currentAccount.getGlobalParam().getId() == status.getId())
+            {
+                logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.ALREADY_DELETE));
+                return ApiResponse.failure(ApiResponseStatus.ALREADY_DELETE);
             }
 
             // update current account
@@ -153,8 +177,18 @@ public class AccountService {
                 return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
             }
 
+            // get status
+            var status = globalParamRepository.findStatusByKeyNameAndType(EnumGlobalParam.Deleted.getMessage(), EnumGlobalParamType.AccountxxxStatus.getMessage());
+
+            // Check if the account record is already deleted
+            if (currentAccount.getGlobalParam().getId() == status.getId())
+            {
+                logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.ALREADY_DELETE));
+                return ApiResponse.failure(ApiResponseStatus.ALREADY_DELETE);
+            }
+
             // update current account
-            currentAccount.setGlobalParam(globalParamRepository.findStatusByKeyNameAndType(EnumGlobalParam.Deleted.getMessage(), EnumGlobalParamType.AccountxxxStatus.getMessage()));
+            currentAccount.setGlobalParam(status);
             currentAccount.setUserId("1");
             currentAccount.setModifiedBy("1");
             currentAccount.setModifiedDate(LocalDateTime.now());
@@ -180,7 +214,8 @@ public class AccountService {
     }
 
     public String GetAuditDescription(int id){
-        var param = new GetAccountResponse();
-        return JsonConverterUtils.SerializeObject(param);
+        var account = accountRepository.findById(id).orElse(null);
+        var recordAuditLogAccount = mapper.toAuditLogDto(account);
+        return JsonConverterUtils.SerializeObject(recordAuditLogAccount);
     }
 }

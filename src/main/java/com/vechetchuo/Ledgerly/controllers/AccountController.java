@@ -3,6 +3,7 @@ package com.vechetchuo.Ledgerly.controllers;
 import com.vechetchuo.Ledgerly.models.dtos.account.*;
 import com.vechetchuo.Ledgerly.services.AccountService;
 import com.vechetchuo.Ledgerly.utils.ApiResponse;
+import com.vechetchuo.Ledgerly.utils.PaginationRequest;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class AccountController {
     }
 
     @PostMapping("/v1/account/get-accounts")
-    public ApiResponse<GetAccountsResponse> getAccounts(@Valid @RequestBody GetAccountsRequest req){
+    public ApiResponse<GetAccountsResponse> getAccounts(@Valid @RequestBody PaginationRequest req){
         return accountService.getAccounts(req);
     }
 
