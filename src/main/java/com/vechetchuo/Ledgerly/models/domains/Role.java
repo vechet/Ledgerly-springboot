@@ -21,6 +21,10 @@ public class Role {
     @Column(unique = true, nullable = false)
     private String name; // e.g., "ADMIN", "USER"
 
+    public Role(String name) {
+        this.name = name;
+    }
+
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserRole> userRoles = new HashSet<>();
 

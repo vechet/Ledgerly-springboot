@@ -33,6 +33,12 @@ public class GlobalParam {
     @Column(name = "memo", length = 500)
     private String memo;
 
+    public GlobalParam(String name, String keyName, String type) {
+        this.name = name;
+        this.keyName = keyName;
+        this.type = type;
+    }
+
     @JsonIgnoreProperties
     @OneToMany(mappedBy = "globalParam", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Account> accounts;

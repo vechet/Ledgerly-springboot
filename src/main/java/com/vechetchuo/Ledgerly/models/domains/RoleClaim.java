@@ -18,6 +18,12 @@ public class RoleClaim {
     private String claimType;   // e.g., "Permission"
     private String claimValue;  // e.g., "CAN_EDIT_USER"
 
+    public RoleClaim(Role role, String claimType, String claimValue) {
+        this.role = role;
+        this.claimType = claimType;
+        this.claimValue = claimValue;
+    }
+
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
