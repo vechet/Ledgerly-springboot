@@ -1,12 +1,11 @@
 package com.vechetchuo.Ledgerly.models.domains;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
-
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "roles")
@@ -25,9 +24,11 @@ public class Role {
         this.name = name;
     }
 
+    @JsonIgnoreProperties
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<UserRole> userRoles = new HashSet<>();
+    private List<UserRole> userRoles;
 
+    @JsonIgnoreProperties
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<RoleClaim> roleClaims = new HashSet<>();
+    private List<RoleClaim> roleClaims;
 }
