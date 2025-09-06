@@ -16,9 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class CategoryController {
-
-    @Autowired
-    private CategoryService categoryService;
+    @Autowired private CategoryService categoryService;
 
     @PostMapping("/v1/category/get-category")
     public ApiResponse<GetCategoryResponse> getCategory(@Valid @RequestBody GetCategoryRequest req){

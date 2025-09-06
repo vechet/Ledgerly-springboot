@@ -10,6 +10,4 @@ import lombok.NoArgsConstructor;
 public class RegisterResponse {
     private int id;
     private String username;
-    private String password;
-    private boolean enabled;
 }

@@ -21,24 +21,12 @@ import java.time.LocalDateTime;
 @Service
 public class TransactionService {
     private static final Logger logger = LoggerFactory.getLogger(TransactionService.class);
-
-    @Autowired
-    private TransactionRepository transactionRepository;
-
-    @Autowired
-    private AuditLogRepository auditLogRepository;
-
-    @Autowired
-    private GlobalParamRepository globalParamRepository;
-
-    @Autowired
-    private AccountRepository accountRepository;
-
-    @Autowired
-    private CategoryRepository categoryRepository;
-
-    @Autowired
-    private TransactionMapper mapper;
+    @Autowired private TransactionRepository transactionRepository;
+    @Autowired private AuditLogRepository auditLogRepository;
+    @Autowired private GlobalParamRepository globalParamRepository;
+    @Autowired private AccountRepository accountRepository;
+    @Autowired private CategoryRepository categoryRepository;
+    @Autowired private TransactionMapper mapper;
 
     public ApiResponse<GetTransactionResponse> getTransaction(GetTransactionRequest req){
         try{

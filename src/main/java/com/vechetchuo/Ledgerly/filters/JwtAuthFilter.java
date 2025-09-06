@@ -22,12 +22,8 @@ import java.io.IOException;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
-    private static final Logger logger = LoggerFactory.getLogger(TransactionService.class);
-
-    @Autowired
-    private JwtUtil jwtUtil;
-    @Autowired
-    private CustomUserDetailsService userDetailsService;
+    @Autowired private JwtUtil jwtUtil;
+    @Autowired private CustomUserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -36,43 +32,56 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String authHeader = request.getHeader("Authorization");
-        String token = null;
-        String username = null;
 
-       try{
-           if (authHeader != null && authHeader.startsWith("Bearer ")) {
-               token = authHeader.substring(7);
-               username = jwtUtil.extractUsername(token);
-           }
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            // No token provided — only block if endpoint is protected
+            if (requiresAuth(request)) {
+                handleStatus(response, HttpServletResponse.SC_UNAUTHORIZED, "Missing token");
+                return;
+            } else {
+                filterChain.doFilter(request, response);
+                return;
+            }
+        }
 
-           if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-               UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        String token = authHeader.substring(7);
+        try {
+            String username = jwtUtil.extractUsername(token);
 
-               if (jwtUtil.validateToken(token, userDetails.getUsername())) {
-                   UsernamePasswordAuthenticationToken authToken =
-                           new UsernamePasswordAuthenticationToken(
-                                   userDetails, null, userDetails.getAuthorities());
-                   authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-                   SecurityContextHolder.getContext().setAuthentication(authToken);
-               }
-           }
-           filterChain.doFilter(request, response);
-       } catch (io.jsonwebtoken.ExpiredJwtException ex) {
-           logger.info(LoggerUtil.formatMessage(403, "Token expired"));
-           handleStatus(response, HttpServletResponse.SC_FORBIDDEN, "Token expired");
-       } catch (io.jsonwebtoken.JwtException ex) {
-           logger.info(LoggerUtil.formatMessage(401, "Invalid token"));
-           handleStatus(response, HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
-       }
+                if (jwtUtil.validateToken(token, userDetails.getUsername())) {
+                    UsernamePasswordAuthenticationToken authToken =
+                            new UsernamePasswordAuthenticationToken(
+                                    userDetails, null, userDetails.getAuthorities());
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
+            }
+
+            filterChain.doFilter(request, response);
+
+        } catch (io.jsonwebtoken.ExpiredJwtException ex) {
+            handleStatus(response, HttpServletResponse.SC_FORBIDDEN, "Token expired");
+        } catch (io.jsonwebtoken.JwtException ex) {
+            handleStatus(response, HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
+        }
     }
 
     private void handleStatus(HttpServletResponse response, int status, String message) throws IOException {
         response.setStatus(status);
         response.setContentType("application/json");
-        response.getWriter().write(
-                String.format("{\"code\":%d,\"message\":\"%s\"}", status, message)
-        );
+        response.getWriter().write(String.format("{\"code\":%d,\"message\":\"%s\"}", status, message));
         response.getWriter().flush();
+    }
+
+    // Optional: define which paths require auth
+    private boolean requiresAuth(HttpServletRequest request) {
+        String path = request.getRequestURI();
+        return !path.startsWith("/api/v1/auth")
+                && !path.startsWith("/swagger")
+                && !path.startsWith("/v3/api-docs")
+                && !path.startsWith("/h2-console");
     }
 }

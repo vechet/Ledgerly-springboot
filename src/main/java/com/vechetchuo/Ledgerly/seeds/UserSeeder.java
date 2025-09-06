@@ -8,6 +8,8 @@ import com.vechetchuo.Ledgerly.repositories.RoleRepository;
 import com.vechetchuo.Ledgerly.repositories.UserRepository;
 import com.vechetchuo.Ledgerly.repositories.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,18 +19,20 @@ public class UserSeeder {
     @Autowired private UserRepository userRepository;
     @Autowired private RoleRepository roleRepository;
     @Autowired private UserRoleRepository userRoleRepository;
-//    @Autowired private PasswordEncoder passwordEncoder;
+    @Autowired private PasswordEncoder passwordEncoder;
+    @Value("${default_user}") private String default_user;
+    @Value("${default_user_pass}") private String default_user_pass;
+    @Value("${default_role}") private String default_role;
 
     @Transactional
     public User seedSystemAdmin() {
-        return userRepository.findByUsername("ssadmin").orElseGet(() -> {
-            Role role = roleRepository.findByName(EnumRoles.ROLE_SYSTEM_ADMIN.name())
+        return userRepository.findByUsername(default_user).orElseGet(() -> {
+            Role role = roleRepository.findByName(default_role)
                     .orElseThrow(() -> new RuntimeException("System admin role not found"));
 
             User user = new User();
-            user.setUsername("ssadmin");
-//            user.setPassword(passwordEncoder.encode("chet@12345"));
-            user.setPassword("chet@12345");
+            user.setUsername(default_user);
+            user.setPassword(passwordEncoder.encode(default_user_pass));
             user.setEnabled(true);
             userRepository.save(user);
 

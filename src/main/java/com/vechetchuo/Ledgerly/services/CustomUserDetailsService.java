@@ -17,9 +17,7 @@ import java.util.Set;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-
-    @Autowired
-    private UserRepository userRepo;
+    @Autowired private UserRepository userRepo;
 
     @Override
     @Transactional(readOnly = true)

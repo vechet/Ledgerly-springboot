@@ -16,9 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class TransactionController {
-
-    @Autowired
-    private TransactionService transactionService;
+    @Autowired private TransactionService transactionService;
 
     @PostMapping("/v1/transaction/get-transaction")
     public ApiResponse<GetTransactionResponse> getTransaction(@Valid @RequestBody GetTransactionRequest req){

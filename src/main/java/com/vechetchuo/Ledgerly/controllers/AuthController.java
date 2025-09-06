@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class AuthController {
-    @Autowired
-    AuthService authService;
+    @Autowired AuthService authService;
 
     @PostMapping("/v1/auth/register")
     public ApiResponse<RegisterResponse> register(@Valid @RequestBody RegisterRequest req){

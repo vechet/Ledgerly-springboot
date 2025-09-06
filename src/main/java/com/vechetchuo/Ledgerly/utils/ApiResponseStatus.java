@@ -9,6 +9,8 @@ public enum ApiResponseStatus {
     SUCCESS(0, "Success"),
     NOT_FOUND(404, "Not Found"),
     UNAUTHORIZED(401, "Unauthorized"),
+    DUPLICATION_USERNAME(409, "Duplicate username"),
+    FORBIDDEN(403, "Forbidden"),
     ALREADY_DELETE(422, "Cannot update or delete record that already deleted.");
 
     private final int code;

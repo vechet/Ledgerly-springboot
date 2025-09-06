@@ -23,18 +23,10 @@ import java.time.LocalDateTime;
 @Service
 public class AccountService {
     private static final Logger logger = LoggerFactory.getLogger(AccountService.class);
-
-    @Autowired
-    private AccountRepository accountRepository;
-
-    @Autowired
-    private AuditLogRepository auditLogRepository;
-
-    @Autowired
-    private GlobalParamRepository globalParamRepository;
-
-    @Autowired
-    private AccountMapper mapper;
+    @Autowired private AccountRepository accountRepository;
+    @Autowired private AuditLogRepository auditLogRepository;
+    @Autowired private GlobalParamRepository globalParamRepository;
+    @Autowired private AccountMapper mapper;
 
     public ApiResponse<GetAccountResponse> getAccount(GetAccountRequest req){
         try{
@@ -80,14 +72,12 @@ public class AccountService {
             // get status
             var status = globalParamRepository.findStatusByKeyNameAndType(EnumGlobalParam.Normal.getMessage(), EnumGlobalParamType.AccountxxxStatus.getMessage());
 
-            // mapping dto to entity
+            // mapping dto to entity and add new account
             var newAccount = mapper.toCreateEntity(req);
             newAccount.setGlobalParam(status);
             newAccount.setUserId("1");
             newAccount.setCreatedBy("1");
             newAccount.setCreatedDate(LocalDateTime.now());
-
-            // add new account
             accountRepository.save(newAccount);
 
             // Add audit log

@@ -23,18 +23,10 @@ import java.time.LocalDateTime;
 @Service
 public class CategoryService {
     private static final Logger logger = LoggerFactory.getLogger(CategoryService.class);
-
-    @Autowired
-    private CategoryRepository categoryRepository;
-
-    @Autowired
-    private AuditLogRepository auditLogRepository;
-
-    @Autowired
-    private GlobalParamRepository globalParamRepository;
-
-    @Autowired
-    private CategoryMapper mapper;
+    @Autowired private CategoryRepository categoryRepository;
+    @Autowired private AuditLogRepository auditLogRepository;
+    @Autowired private GlobalParamRepository globalParamRepository;
+    @Autowired private CategoryMapper mapper;
 
     public ApiResponse<GetCategoryResponse> getCategory(GetCategoryRequest req){
         try{

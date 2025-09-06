@@ -17,9 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class AccountController {
-
-    @Autowired
-    private AccountService accountService;
+    @Autowired private AccountService accountService;
 
     @PreAuthorize("hasAuthority('ACCOUNT_VIEW')")
     @PostMapping("/v1/account/get-account")
