@@ -25,22 +25,11 @@ import java.time.LocalDateTime;
 @Service
 public class AuthService {
     private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private JwtUtil jwtUtil;
-
-    @Autowired
-    private AuditLogRepository auditLogRepository;
-
-    @Autowired
-    private UserMapper mapper;
-
-    @Autowired
-    private RoleRepository roleRepository;
-
+    @Autowired private UserRepository userRepository;
+    @Autowired private JwtUtil jwtUtil;
+    @Autowired private AuditLogRepository auditLogRepository;
+    @Autowired private UserMapper mapper;
+    @Autowired private RoleRepository roleRepository;
     @Autowired private UserRoleRepository userRoleRepository;
 
     @Transactional
