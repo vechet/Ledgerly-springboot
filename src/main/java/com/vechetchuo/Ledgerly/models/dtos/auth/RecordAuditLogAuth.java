@@ -13,6 +13,9 @@ public class RecordAuditLogAuth {
     private int id;
     private String username;
     private boolean enabled;
+    private String phone;
+    private String email;
+    private String address;
 //    private String memo;
 //    private int statusId;
 //    private String statusName;

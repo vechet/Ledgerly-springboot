@@ -12,7 +12,5 @@ public interface UserMapper {
     User toCreateEntity(RegisterRequest dto);
     RegisterResponse toCreateDto(User entity);
 
-//    @Mapping(source = "globalParam.id", target = "statusId")
-//    @Mapping(source = "globalParam.name", target = "statusName")
     RecordAuditLogAuth toAuditLogDto(User entity);
 }

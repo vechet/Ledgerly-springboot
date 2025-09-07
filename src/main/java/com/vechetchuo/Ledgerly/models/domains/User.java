@@ -20,8 +20,15 @@ public class User {
     @Column(unique = true, nullable = false)
     private String username;
 
+    @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
     private boolean enabled;
+
+    private String phone;
+    private String email;
+    private String address;
 
     @JsonIgnoreProperties
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

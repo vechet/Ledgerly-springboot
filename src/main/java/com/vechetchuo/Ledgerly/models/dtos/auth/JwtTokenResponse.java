@@ -7,10 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisterResponse {
-    private int id;
-    private String username;
-    private String phone;
-    private String email;
-    private String address;
+public class JwtTokenResponse {
+    private String token;
+    private long expiresIn;
 }
