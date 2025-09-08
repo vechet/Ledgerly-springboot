@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DeleteAccountRequest {
     @NotNull(message = "This field Name is required!")
-    private int id;
+    private Integer id;
 }

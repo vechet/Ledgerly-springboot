@@ -1,5 +1,6 @@
 package com.vechetchuo.Ledgerly.models.dtos.transaction;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,6 +22,6 @@ public class CreateTransactionRequest {
     @NotNull(message = "This field Transaction Date is required!")
     private LocalDateTime transactionDate;
     private String memo;
-    @NotNull(message = "This field Type is required!")
+    @NotBlank(message = "This field Type is required!")
     private String type;
 }

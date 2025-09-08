@@ -1,5 +1,6 @@
 package com.vechetchuo.Ledgerly.models.dtos.transaction;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,8 +13,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateTransactionRequest {
-    @NotNull(message = "This field Name is required!")
-    private int id;
+    @NotNull(message = "This field Id is required!")
+    private Integer id;
     @NotNull(message = "This field Account Id is required!")
     private Integer accountId;
     @NotNull(message = "This field Category Id is required!")
@@ -23,6 +24,6 @@ public class UpdateTransactionRequest {
     @NotNull(message = "This field Transaction Date is required!")
     private LocalDateTime transactionDate;
     private String memo;
-    @NotNull(message = "This field Type is required!")
+    @NotBlank(message = "This field Type is required!")
     private String type;
 }
