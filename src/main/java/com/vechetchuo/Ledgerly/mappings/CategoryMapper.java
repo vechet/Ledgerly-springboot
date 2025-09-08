@@ -16,17 +16,56 @@ public interface CategoryMapper {
     @Mapping(source = "parent.name", target = "parentName")
     CategoriesResponse toGetsDto(Category entity);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "iconName", ignore = true)
+    @Mapping(target = "userId", ignore = true)
+    @Mapping(target = "systemValue", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "createdDate", ignore = true)
+    @Mapping(target = "modifiedBy", ignore = true)
+    @Mapping(target = "modifiedDate", ignore = true)
+    @Mapping(target = "parent", ignore = true)
+    @Mapping(target = "children", ignore = true)
+    @Mapping(target = "transactions", ignore = true)
+    @Mapping(target = "globalParam", ignore = true)
     Category toCreateEntity(CreateCategoryRequest dto);
+
     @Mapping(source = "parent.id", target = "parentId")
     @Mapping(source = "parent.name", target = "parentName")
     CreateCategoryResponse toCreateDto(Category entity);
 
+    @Mapping(target = "iconName", ignore = true)
+    @Mapping(target = "userId", ignore = true)
+    @Mapping(target = "systemValue", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "createdDate", ignore = true)
+    @Mapping(target = "modifiedBy", ignore = true)
+    @Mapping(target = "modifiedDate", ignore = true)
+    @Mapping(target = "parent", ignore = true)
+    @Mapping(target = "children", ignore = true)
+    @Mapping(target = "transactions", ignore = true)
+    @Mapping(target = "globalParam", ignore = true)
     Category toUpdateEntity(UpdateCategoryRequest dto);
+
     @Mapping(source = "parent.id", target = "parentId")
     @Mapping(source = "parent.name", target = "parentName")
     UpdateCategoryResponse toUpdateDto(Category entity);
 
+    @Mapping(target = "name", ignore = true)
+    @Mapping(target = "iconName", ignore = true)
+    @Mapping(target = "userId", ignore = true)
+    @Mapping(target = "systemValue", ignore = true)
+    @Mapping(target = "memo", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "createdDate", ignore = true)
+    @Mapping(target = "modifiedBy", ignore = true)
+    @Mapping(target = "modifiedDate", ignore = true)
+    @Mapping(target = "parent", ignore = true)
+    @Mapping(target = "children", ignore = true)
+    @Mapping(target = "transactions", ignore = true)
+    @Mapping(target = "globalParam", ignore = true)
     Category toDeleteEntity(DeleteCategoryRequest dto);
+
     DeleteCategoryResponse toDeleteDto(Category entity);
 
     @Mapping(source = "parent.id", target = "parentId")
