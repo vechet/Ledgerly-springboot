@@ -27,6 +27,7 @@ public class AccountService {
     @Autowired private AuditLogRepository auditLogRepository;
     @Autowired private GlobalParamRepository globalParamRepository;
     @Autowired private AccountMapper mapper;
+    @Autowired UserService userService;
 
     public ApiResponse<GetAccountResponse> getAccount(GetAccountRequest req){
         try{
@@ -68,6 +69,7 @@ public class AccountService {
     public ApiResponse<CreateAccountResponse> createAccount(CreateAccountRequest req){
         try{
             //get userId
+            var userId = userService.getUserId();
 
             // get status
             var status = globalParamRepository.findStatusByKeyNameAndType(EnumGlobalParam.Normal.getMessage(), EnumGlobalParamType.AccountxxxStatus.getMessage());

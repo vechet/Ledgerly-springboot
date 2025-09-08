@@ -2,6 +2,7 @@ package com.vechetchuo.Ledgerly.services;
 
 import com.vechetchuo.Ledgerly.models.domains.Role;
 import com.vechetchuo.Ledgerly.models.domains.User;
+import com.vechetchuo.Ledgerly.models.dtos.auth.UserPrincipal;
 import com.vechetchuo.Ledgerly.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -35,12 +36,13 @@ public class CustomUserDetailsService implements UserDetailsService {
             );
         });
 
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
-                user.getPassword(),
-                user.isEnabled(),
-                true, true, true,
-                authorities
-        );
+//        return new org.springframework.security.core.userdetails.User(
+//                user.getUsername(),
+//                user.getPassword(),
+//                user.isEnabled(),
+//                true, true, true,
+//                authorities
+//        );
+        return new UserPrincipal(user, authorities);
     }
 }
