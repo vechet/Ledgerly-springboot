@@ -77,8 +77,8 @@ public class AccountService {
             // mapping dto to entity and add new account
             var newAccount = mapper.toCreateEntity(req);
             newAccount.setGlobalParam(status);
-            newAccount.setUserId("1");
-            newAccount.setCreatedBy("1");
+            newAccount.setUserId(userId);
+            newAccount.setCreatedBy(userId);
             newAccount.setCreatedDate(LocalDateTime.now());
             accountRepository.save(newAccount);
 
@@ -86,10 +86,10 @@ public class AccountService {
             var accountAuditLog = new AuditLog();
             accountAuditLog.setControllerName("Account");
             accountAuditLog.setMethodName("Create");
-            accountAuditLog.setTransactionId(newAccount.getId());
+            accountAuditLog.setTransactionId(Integer.toString(newAccount.getId()));
             accountAuditLog.setTransactionNo(newAccount.getName());
             accountAuditLog.setDescription(GetAuditDescription(newAccount.getId()));
-            accountAuditLog.setCreatedBy("1");
+            accountAuditLog.setCreatedBy(userId);
             accountAuditLog.setCreatedDate(LocalDateTime.now());
             auditLogRepository.save(accountAuditLog);
 
@@ -106,6 +106,7 @@ public class AccountService {
     public ApiResponse<UpdateAccountResponse> updateAccount(UpdateAccountRequest req){
         try{
             //get userId
+            var userId = userService.getUserId();
 
             // get current account
             var currentAccount = accountRepository.findById(req.getId()).orElse(null);
@@ -130,8 +131,8 @@ public class AccountService {
             currentAccount.setName(req.getName());
             currentAccount.setCurrency(req.getCurrency());
             currentAccount.setMemo(req.getMemo());
-            currentAccount.setUserId("1");
-            currentAccount.setModifiedBy("1");
+            currentAccount.setUserId(userId);
+            currentAccount.setModifiedBy(userId);
             currentAccount.setModifiedDate(LocalDateTime.now());
             accountRepository.save(currentAccount);
 
@@ -139,10 +140,10 @@ public class AccountService {
             var accountAuditLog = new AuditLog();
             accountAuditLog.setControllerName("Account");
             accountAuditLog.setMethodName("Update");
-            accountAuditLog.setTransactionId(currentAccount.getId());
+            accountAuditLog.setTransactionId(Integer.toString(currentAccount.getId()));
             accountAuditLog.setTransactionNo(currentAccount.getName());
             accountAuditLog.setDescription(GetAuditDescription(currentAccount.getId()));
-            accountAuditLog.setCreatedBy("1");
+            accountAuditLog.setCreatedBy(userId);
             accountAuditLog.setCreatedDate(LocalDateTime.now());
             auditLogRepository.save(accountAuditLog);
 
@@ -159,6 +160,7 @@ public class AccountService {
     public ApiResponse<DeleteAccountResponse> deleteAccount(DeleteAccountRequest req){
         try{
             //get userId
+            var userId = userService.getUserId();
 
             // get current account
             var currentAccount = accountRepository.findById(req.getId()).orElse(null);
@@ -181,8 +183,8 @@ public class AccountService {
 
             // update current account
             currentAccount.setGlobalParam(status);
-            currentAccount.setUserId("1");
-            currentAccount.setModifiedBy("1");
+            currentAccount.setUserId(userId);
+            currentAccount.setModifiedBy(userId);
             currentAccount.setModifiedDate(LocalDateTime.now());
             accountRepository.save(currentAccount);
 
@@ -190,10 +192,10 @@ public class AccountService {
             var accountAuditLog = new AuditLog();
             accountAuditLog.setControllerName("Account");
             accountAuditLog.setMethodName("Delete");
-            accountAuditLog.setTransactionId(currentAccount.getId());
+            accountAuditLog.setTransactionId(Integer.toString(currentAccount.getId()));
             accountAuditLog.setTransactionNo(currentAccount.getName());
             accountAuditLog.setDescription(GetAuditDescription(currentAccount.getId()));
-            accountAuditLog.setCreatedBy("1");
+            accountAuditLog.setCreatedBy(userId);
             accountAuditLog.setCreatedDate(LocalDateTime.now());
             auditLogRepository.save(accountAuditLog);
 

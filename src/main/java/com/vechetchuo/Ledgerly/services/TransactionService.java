@@ -90,7 +90,7 @@ public class TransactionService {
             var transactionAuditLog = new AuditLog();
             transactionAuditLog.setControllerName("Transaction");
             transactionAuditLog.setMethodName("Create");
-            transactionAuditLog.setTransactionId(newTransaction.getId());
+            transactionAuditLog.setTransactionId(Integer.toString(newTransaction.getId()));
             transactionAuditLog.setTransactionNo("");
             transactionAuditLog.setDescription(GetAuditDescription(newTransaction.getId()));
             transactionAuditLog.setCreatedBy("1");
@@ -148,7 +148,7 @@ public class TransactionService {
             var transactionAuditLog = new AuditLog();
             transactionAuditLog.setControllerName("Transaction");
             transactionAuditLog.setMethodName("Update");
-            transactionAuditLog.setTransactionId(currentTransaction.getId());
+            transactionAuditLog.setTransactionId(Integer.toString(currentTransaction.getId()));
             transactionAuditLog.setTransactionNo("");
             transactionAuditLog.setDescription(GetAuditDescription(currentTransaction.getId()));
             transactionAuditLog.setCreatedBy("1");
@@ -199,7 +199,7 @@ public class TransactionService {
             var transactionAuditLog = new AuditLog();
             transactionAuditLog.setControllerName("Transaction");
             transactionAuditLog.setMethodName("Delete");
-            transactionAuditLog.setTransactionId(currentTransaction.getId());
+            transactionAuditLog.setTransactionId(Integer.toString(currentTransaction.getId()));
             transactionAuditLog.setTransactionNo("");
             transactionAuditLog.setDescription(GetAuditDescription(currentTransaction.getId()));
             transactionAuditLog.setCreatedBy("1");

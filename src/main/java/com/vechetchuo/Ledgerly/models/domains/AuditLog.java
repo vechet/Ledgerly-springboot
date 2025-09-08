@@ -26,7 +26,7 @@ public class AuditLog {
     private String methodName;
 
     @Column(name = "transaction_id", nullable = false)
-    private int transactionId;
+    private String transactionId;
 
     @Column(name = "transaction_no", nullable = false, length = 100)
     private String transactionNo;

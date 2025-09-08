@@ -27,6 +27,7 @@ public class CategoryService {
     @Autowired private AuditLogRepository auditLogRepository;
     @Autowired private GlobalParamRepository globalParamRepository;
     @Autowired private CategoryMapper mapper;
+    @Autowired private UserService userService;
 
     public ApiResponse<GetCategoryResponse> getCategory(GetCategoryRequest req){
         try{
@@ -68,6 +69,7 @@ public class CategoryService {
     public ApiResponse<CreateCategoryResponse> createCategory(CreateCategoryRequest req){
         try{
             //get userId
+            var userId = userService.getUserId();
 
             // get some infos
             var status = globalParamRepository.findStatusByKeyNameAndType(EnumGlobalParam.Normal.getMessage(), EnumGlobalParamType.CategoryxxxStatus.getMessage());
@@ -77,8 +79,8 @@ public class CategoryService {
             var newCategory = mapper.toCreateEntity(req);
             newCategory.setParent(parent);
             newCategory.setGlobalParam(status);
-            newCategory.setUserId("1");
-            newCategory.setCreatedBy("1");
+            newCategory.setUserId(userId);
+            newCategory.setCreatedBy(userId);
             newCategory.setCreatedDate(LocalDateTime.now());
 
             // add new category
@@ -88,10 +90,10 @@ public class CategoryService {
             var categoryAuditLog = new AuditLog();
             categoryAuditLog.setControllerName("Category");
             categoryAuditLog.setMethodName("Create");
-            categoryAuditLog.setTransactionId(newCategory.getId());
+            categoryAuditLog.setTransactionId(Integer.toString(newCategory.getId()));
             categoryAuditLog.setTransactionNo(newCategory.getName());
             categoryAuditLog.setDescription(GetAuditDescription(newCategory.getId()));
-            categoryAuditLog.setCreatedBy("1");
+            categoryAuditLog.setCreatedBy(userId);
             categoryAuditLog.setCreatedDate(LocalDateTime.now());
             auditLogRepository.save(categoryAuditLog);
 
@@ -108,6 +110,7 @@ public class CategoryService {
     public ApiResponse<UpdateCategoryResponse> updateCategory(UpdateCategoryRequest req){
         try{
             //get userId
+            var userId = userService.getUserId();
 
             // get current category
             var currentCategory = categoryRepository.findById(req.getId()).orElse(null);
@@ -133,8 +136,8 @@ public class CategoryService {
             currentCategory.setName(req.getName());
             currentCategory.setParent(parent);
             currentCategory.setMemo(req.getMemo());
-            currentCategory.setUserId("1");
-            currentCategory.setModifiedBy("1");
+            currentCategory.setUserId(userId);
+            currentCategory.setModifiedBy(userId);
             currentCategory.setModifiedDate(LocalDateTime.now());
             categoryRepository.save(currentCategory);
 
@@ -142,10 +145,10 @@ public class CategoryService {
             var categoryAuditLog = new AuditLog();
             categoryAuditLog.setControllerName("Category");
             categoryAuditLog.setMethodName("Update");
-            categoryAuditLog.setTransactionId(currentCategory.getId());
+            categoryAuditLog.setTransactionId(Integer.toString(currentCategory.getId()));
             categoryAuditLog.setTransactionNo(currentCategory.getName());
             categoryAuditLog.setDescription(GetAuditDescription(currentCategory.getId()));
-            categoryAuditLog.setCreatedBy("1");
+            categoryAuditLog.setCreatedBy(userId);
             categoryAuditLog.setCreatedDate(LocalDateTime.now());
             auditLogRepository.save(categoryAuditLog);
 
@@ -162,6 +165,7 @@ public class CategoryService {
     public ApiResponse<DeleteCategoryResponse> deleteCategory(DeleteCategoryRequest req){
         try{
             //get userId
+            var userId = userService.getUserId();
 
             // get current category
             var currentCategory = categoryRepository.findById(req.getId()).orElse(null);
@@ -184,8 +188,8 @@ public class CategoryService {
 
             // update current category
             currentCategory.setGlobalParam(status);
-            currentCategory.setUserId("1");
-            currentCategory.setModifiedBy("1");
+            currentCategory.setUserId(userId);
+            currentCategory.setModifiedBy(userId);
             currentCategory.setModifiedDate(LocalDateTime.now());
             categoryRepository.save(currentCategory);
 
@@ -193,10 +197,10 @@ public class CategoryService {
             var categoryAuditLog = new AuditLog();
             categoryAuditLog.setControllerName("Category");
             categoryAuditLog.setMethodName("Delete");
-            categoryAuditLog.setTransactionId(currentCategory.getId());
+            categoryAuditLog.setTransactionId(Integer.toString(currentCategory.getId()));
             categoryAuditLog.setTransactionNo(currentCategory.getName());
             categoryAuditLog.setDescription(GetAuditDescription(currentCategory.getId()));
-            categoryAuditLog.setCreatedBy("1");
+            categoryAuditLog.setCreatedBy(userId);
             categoryAuditLog.setCreatedDate(LocalDateTime.now());
             auditLogRepository.save(categoryAuditLog);
 

@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public class UserService {
 
-    public int getUserId(){
+    public String getUserId(){
         var user = (UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return user.getUserId();
     }

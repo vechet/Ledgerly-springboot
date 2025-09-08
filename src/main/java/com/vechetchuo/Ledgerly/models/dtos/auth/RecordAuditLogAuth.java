@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RecordAuditLogAuth {
-    private int id;
+    private String id;
     private String username;
     private boolean enabled;
     private String phone;

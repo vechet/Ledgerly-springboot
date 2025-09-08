@@ -10,6 +10,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserRoleId implements Serializable {
-    private int user;
+    private String user;
     private int role;
 }

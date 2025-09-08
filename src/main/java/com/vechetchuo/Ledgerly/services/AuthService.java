@@ -133,7 +133,7 @@ public class AuthService {
         }
     }
 
-    public String GetAuditDescription(int id){
+    public String GetAuditDescription(String id){
         var user = userRepository.findById(id).orElse(null);
         var recordAuditLogUser = mapper.toAuditLogDto(user);
         return JsonConverterUtils.SerializeObject(recordAuditLogUser);
