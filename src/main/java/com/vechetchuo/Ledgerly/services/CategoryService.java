@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryService {
@@ -53,7 +54,7 @@ public class CategoryService {
         try{
             PageRequest pageRequest = PaginationUtil.toPageRequest(req);
             Page<Category> categoryPage = categoryRepository.findDynamic(req.getFilter().getSearch(), pageRequest);
-            var categories = categoryPage.getContent().stream().map(mapper::toGetsDto).toList();
+            var categories = categoryPage.getContent().stream().map(mapper::toGetsDto).collect(Collectors.toList());
             var pageInfo = new PageInfo(req.getPage(), req.getPageSize(), categoryPage.getTotalPages(), categoryPage.getTotalElements());
 
             // Response

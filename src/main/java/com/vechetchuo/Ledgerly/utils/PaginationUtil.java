@@ -3,6 +3,7 @@ package com.vechetchuo.Ledgerly.utils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PaginationUtil {
 
@@ -16,7 +17,7 @@ public class PaginationUtil {
                             opt.getDirection().equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC,
                             opt.getProperty());
                 })
-                .toList();
+                .collect(Collectors.toList());
 
         Sort sort = orders.isEmpty() ? Sort.unsorted() : Sort.by(orders);
         return PageRequest.of(request.getPage() - 1, request.getPageSize(), sort);

@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 @Service
 public class AccountService {
@@ -53,7 +54,7 @@ public class AccountService {
         try{
             PageRequest pageRequest = PaginationUtil.toPageRequest(req);
             Page<Account> accountPage = accountRepository.findDynamic(req.getFilter().getSearch(), pageRequest);
-            var accounts = accountPage.getContent().stream().map(mapper::toGetsDto).toList();
+            var accounts = accountPage.getContent().stream().map(mapper::toGetsDto).collect(Collectors.toList());
             var pageInfo = new PageInfo(req.getPage(), req.getPageSize(), accountPage.getTotalPages(), accountPage.getTotalElements());
 
             // Response

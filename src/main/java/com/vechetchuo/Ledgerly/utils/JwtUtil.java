@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtUtil {
@@ -45,13 +46,13 @@ public class JwtUtil {
                 .map(UserRole::getRole)              // go from UserRole to Role
                 .map(Role::getName)                  // get role name
                 .distinct()
-                .toList());
+                .collect(Collectors.toList()));
         claims.put("permissions", user.getUserRoles().stream()
                 .map(UserRole::getRole)              // go from UserRole to Role
                 .flatMap(role -> role.getRoleClaims().stream()) // get RoleClaims
                 .map(RoleClaim::getClaimValue)       // get permission string
                 .distinct()
-                .toList());
+                .collect(Collectors.toList()));
         return createToken(claims, user.getUsername());
     }
 

@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthService {
@@ -104,13 +105,13 @@ public class AuthService {
                     .map(UserRole::getRole)              // go from UserRole to Role
                     .map(Role::getName)                  // get role name
                     .distinct()
-                    .toList());
+                    .collect(Collectors.toList()));
             userResponse.setPermissions(user.getUserRoles().stream()
                     .map(UserRole::getRole)              // go from UserRole to Role
                     .flatMap(role -> role.getRoleClaims().stream()) // get RoleClaims
                     .map(RoleClaim::getClaimValue)       // get permission string
                     .distinct()
-                    .toList());
+                    .collect(Collectors.toList()));
 
             res.setUser(userResponse);
             return ApiResponse.success(res);
