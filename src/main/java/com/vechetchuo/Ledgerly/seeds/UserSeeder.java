@@ -24,11 +24,9 @@ public class UserSeeder {
     @Value("${default_user_pass}") private String default_user_pass;
     @Value("${default_role}") private String default_role;
 
-    @Transactional
     public User seedSystemAdmin() {
         return userRepository.findByUsername(default_user).orElseGet(() -> {
-            Role role = roleRepository.findByName(default_role)
-                    .orElseThrow(() -> new RuntimeException("System admin role not found"));
+            Role role = roleRepository.findByName(default_role).orElse(null);
 
             User user = new User();
             user.setUsername(default_user);

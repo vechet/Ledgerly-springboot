@@ -17,13 +17,12 @@ public class GlobalParamSeeder {
 
     @Autowired private GlobalParamRepository globalParamRepository;
 
-    @Transactional
     public void seed() {
         if (globalParamRepository.count() > 0) return;
 
         List<GlobalParam> params = new ArrayList<>();
-        for (EnumGlobalParamType type : EnumGlobalParamType.values()) {
-            for (EnumGlobalParam status : List.of(EnumGlobalParam.Normal, EnumGlobalParam.Deleted)) {
+        for (var type : EnumGlobalParamType.values()) {
+            for (var status : EnumGlobalParam.values()) {
                 params.add(new GlobalParam(status.getMessage(), status.getMessage(), type.getMessage()));
             }
         }

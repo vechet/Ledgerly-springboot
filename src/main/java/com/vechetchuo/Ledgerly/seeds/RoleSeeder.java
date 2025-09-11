@@ -9,10 +9,8 @@ import com.vechetchuo.Ledgerly.repositories.RoleClaimRepository;
 import com.vechetchuo.Ledgerly.repositories.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -21,37 +19,37 @@ public class RoleSeeder {
     @Autowired private RoleRepository roleRepository;
     @Autowired private RoleClaimRepository roleClaimRepository;
 
-    private final Map<EnumRoles, EnumPermissions[]> rolePermissionMap = Map.of(
-            EnumRoles.ROLE_SYSTEM_ADMIN, EnumPermissions.values(),
-            EnumRoles.ROLE_ADMIN, new EnumPermissions[] {
-                    EnumPermissions.ACCOUNT_VIEW,
-                    EnumPermissions.ACCOUNT_UPDATE,
-                    EnumPermissions.CATEGORY_VIEW,
-                    EnumPermissions.TRANSACTION_VIEW
-            },
-            EnumRoles.ROLE_USER, EnumPermissions.values()
-    );
-
-    @Transactional
     public void seed() {
+        // init roles and permissions
+        Map<EnumRoles, List<EnumPermissions>> rolePermissions = new HashMap<>();
+        rolePermissions.put(EnumRoles.ROLE_SYSTEM_ADMIN, Arrays.asList(EnumPermissions.values()));
+        rolePermissions.put(EnumRoles.ROLE_ADMIN, Arrays.asList(
+                EnumPermissions.ACCOUNT_VIEW,
+                EnumPermissions.ACCOUNT_UPDATE,
+                EnumPermissions.CATEGORY_VIEW,
+                EnumPermissions.TRANSACTION_VIEW
+        ));
+        rolePermissions.put(EnumRoles.ROLE_USER, Arrays.asList(EnumPermissions.values()));
+
+        // claim type permissions
         String claimType = EnumClaimTypes.PERMISSIONS.toString();
 
-        for (var entry : rolePermissionMap.entrySet()) {
-            String roleName = entry.getKey().name();
-            var permissions = entry.getValue();
+        // process init role and permission
+        rolePermissions.forEach((role, permissions) -> {
+            var roleName = role.getMessage();
 
-            Role role = roleRepository.findByName(roleName)
+            Role newRole = roleRepository.findByName(roleName)
                     .orElseGet(() -> roleRepository.save(new Role(roleName)));
 
-            Set<String> existingClaims = roleClaimRepository.findByRoleIdAndClaimType(role.getId(), claimType)
+            Set<String> existingClaims = roleClaimRepository.findByRoleIdAndClaimType(newRole.getId(), claimType)
                     .stream().map(RoleClaim::getClaimValue).collect(Collectors.toSet());
 
-            for (EnumPermissions perm : permissions) {
-                String value = perm.name();
-                if (!existingClaims.contains(value)) {
-                    roleClaimRepository.save(new RoleClaim(role, claimType, value));
+            for (EnumPermissions permission : permissions){
+                var permName = permission.getMessage();
+                if (!existingClaims.contains(permName)) {
+                    roleClaimRepository.save(new RoleClaim(newRole, claimType, permName));
                 }
             }
-        }
+        });
     }
 }

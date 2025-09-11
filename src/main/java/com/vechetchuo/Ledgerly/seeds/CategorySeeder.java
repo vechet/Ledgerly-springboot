@@ -21,7 +21,6 @@ public class CategorySeeder {
     @Autowired
     private GlobalParamRepository globalParamRepository;
 
-    @Transactional
     public void seed(User user) {
         if (categoryRepository.count() > 0) return;
 

@@ -37,7 +37,7 @@ public class User {
 
     @PrePersist
     public void assignId() {
-        if (this.id == null || this.id.isBlank()) {
+        if (this.id == null || this.id.isEmpty()) {
             this.id = UUID.randomUUID().toString();
         }
     }
