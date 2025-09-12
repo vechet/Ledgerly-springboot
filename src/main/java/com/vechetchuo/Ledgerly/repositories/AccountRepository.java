@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Integer> {
-    @Query("SELECT a FROM Account a WHERE (:name IS NULL OR :name = '' OR a.name = :name)")
-    Page<Account> findDynamic(@Param("name") String name, Pageable pageable);
+    @Query("SELECT a FROM Account a WHERE " +
+    "(:name IS NULL OR :name = '' OR a.name = :name) AND " +
+    "(:userId IS NULL OR :userId = '' OR a.userId = :userId)")
+    Page<Account> findDynamic(@Param("name") String name, @Param("userId") String userId, Pageable pageable);
 }

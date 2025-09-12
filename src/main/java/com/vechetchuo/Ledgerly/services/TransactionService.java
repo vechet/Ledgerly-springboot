@@ -28,6 +28,7 @@ public class TransactionService {
     @Autowired private AccountRepository accountRepository;
     @Autowired private CategoryRepository categoryRepository;
     @Autowired private TransactionMapper mapper;
+    @Autowired private UserService userService;
 
     public ApiResponse<GetTransactionResponse> getTransaction(GetTransactionRequest req){
         try{
@@ -51,8 +52,13 @@ public class TransactionService {
 
     public ApiResponse<GetTransactionsResponse> getTransactions(PaginationRequest req){
         try{
+            //get userId
+            var userId = userService.getUserId();
+            var isSystemAdminUser = userService.isSystemAdminUser();
+            String currentUser = isSystemAdminUser ? null : userId;
+
             PageRequest pageRequest = PaginationUtil.toPageRequest(req);
-            Page<Transaction> transactionPage = transactionRepository.findDynamic(req.getFilter().getSearch(), pageRequest);
+            Page<Transaction> transactionPage = transactionRepository.findDynamic(req.getFilter().getSearch(), currentUser, pageRequest);
             var transactions = transactionPage.getContent().stream().map(mapper::toGetsDto).collect(Collectors.toList());
             var pageInfo = new PageInfo(req.getPage(), req.getPageSize(), transactionPage.getTotalPages(), transactionPage.getTotalElements());
 
@@ -69,6 +75,7 @@ public class TransactionService {
     public ApiResponse<CreateTransactionResponse> createTransaction(CreateTransactionRequest req){
         try{
             //get userId
+            var userId = userService.getUserId();
 
             // get some infos
             var status = globalParamRepository.findStatusByKeyNameAndType(EnumGlobalParam.Normal.getMessage(), EnumGlobalParamType.TransactionxxxStatus.getMessage());
@@ -80,8 +87,8 @@ public class TransactionService {
             newTransaction.setAccount(account);
             newTransaction.setCategory(category);
             newTransaction.setGlobalParam(status);
-            newTransaction.setUserId("1");
-            newTransaction.setCreatedBy("1");
+            newTransaction.setUserId(userId);
+            newTransaction.setCreatedBy(userId);
             newTransaction.setCreatedDate(LocalDateTime.now());
 
             // add new transaction
@@ -94,7 +101,7 @@ public class TransactionService {
             transactionAuditLog.setTransactionId(Integer.toString(newTransaction.getId()));
             transactionAuditLog.setTransactionNo("");
             transactionAuditLog.setDescription(GetAuditDescription(newTransaction.getId()));
-            transactionAuditLog.setCreatedBy("1");
+            transactionAuditLog.setCreatedBy(userId);
             transactionAuditLog.setCreatedDate(LocalDateTime.now());
             auditLogRepository.save(transactionAuditLog);
 
@@ -111,6 +118,7 @@ public class TransactionService {
     public ApiResponse<UpdateTransactionResponse> updateTransaction(UpdateTransactionRequest req){
         try{
             //get userId
+            var userId = userService.getUserId();
 
             // get current transaction
             var currentTransaction = transactionRepository.findById(req.getId()).orElse(null);
@@ -140,8 +148,8 @@ public class TransactionService {
             currentTransaction.setTransactionDate(req.getTransactionDate());
             currentTransaction.setType(req.getType());
             currentTransaction.setMemo(req.getMemo());
-            currentTransaction.setUserId("1");
-            currentTransaction.setModifiedBy("1");
+            currentTransaction.setUserId(userId);
+            currentTransaction.setModifiedBy(userId);
             currentTransaction.setModifiedDate(LocalDateTime.now());
             transactionRepository.save(currentTransaction);
 
@@ -152,7 +160,7 @@ public class TransactionService {
             transactionAuditLog.setTransactionId(Integer.toString(currentTransaction.getId()));
             transactionAuditLog.setTransactionNo("");
             transactionAuditLog.setDescription(GetAuditDescription(currentTransaction.getId()));
-            transactionAuditLog.setCreatedBy("1");
+            transactionAuditLog.setCreatedBy(userId);
             transactionAuditLog.setCreatedDate(LocalDateTime.now());
             auditLogRepository.save(transactionAuditLog);
 
@@ -169,6 +177,7 @@ public class TransactionService {
     public ApiResponse<DeleteTransactionResponse> deleteTransaction(DeleteTransactionRequest req){
         try{
             //get userId
+            var userId = userService.getUserId();
 
             // get current transaction
             var currentTransaction = transactionRepository.findById(req.getId()).orElse(null);
@@ -191,8 +200,8 @@ public class TransactionService {
 
             // update current transaction
             currentTransaction.setGlobalParam(status);
-            currentTransaction.setUserId("1");
-            currentTransaction.setModifiedBy("1");
+            currentTransaction.setUserId(userId);
+            currentTransaction.setModifiedBy(userId);
             currentTransaction.setModifiedDate(LocalDateTime.now());
             transactionRepository.save(currentTransaction);
 
@@ -203,7 +212,7 @@ public class TransactionService {
             transactionAuditLog.setTransactionId(Integer.toString(currentTransaction.getId()));
             transactionAuditLog.setTransactionNo("");
             transactionAuditLog.setDescription(GetAuditDescription(currentTransaction.getId()));
-            transactionAuditLog.setCreatedBy("1");
+            transactionAuditLog.setCreatedBy(userId);
             transactionAuditLog.setCreatedDate(LocalDateTime.now());
             auditLogRepository.save(transactionAuditLog);
 

@@ -28,7 +28,7 @@ public class AccountService {
     @Autowired private AuditLogRepository auditLogRepository;
     @Autowired private GlobalParamRepository globalParamRepository;
     @Autowired private AccountMapper mapper;
-    @Autowired UserService userService;
+    @Autowired private UserService userService;
 
     public ApiResponse<GetAccountResponse> getAccount(GetAccountRequest req){
         try{
@@ -52,8 +52,13 @@ public class AccountService {
 
     public ApiResponse<GetAccountsResponse> getAccounts(PaginationRequest req){
         try{
+            //get userId
+            var userId = userService.getUserId();
+            var isSystemAdminUser = userService.isSystemAdminUser();
+            String currentUser = isSystemAdminUser ? null : userId;
+
             PageRequest pageRequest = PaginationUtil.toPageRequest(req);
-            Page<Account> accountPage = accountRepository.findDynamic(req.getFilter().getSearch(), pageRequest);
+            Page<Account> accountPage = accountRepository.findDynamic(req.getFilter().getSearch(), currentUser, pageRequest);
             var accounts = accountPage.getContent().stream().map(mapper::toGetsDto).collect(Collectors.toList());
             var pageInfo = new PageInfo(req.getPage(), req.getPageSize(), accountPage.getTotalPages(), accountPage.getTotalElements());
 

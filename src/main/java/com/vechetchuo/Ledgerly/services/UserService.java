@@ -2,6 +2,7 @@ package com.vechetchuo.Ledgerly.services;
 
 import com.vechetchuo.Ledgerly.enums.EnumRoles;
 import com.vechetchuo.Ledgerly.models.dtos.auth.UserPrincipal;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +21,10 @@ public class UserService {
         return user.getUsername();
     }
 
-    public boolean IsSystemAdminUser(){
-        var user = (UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return false;
+    public boolean isSystemAdminUser() {
+        var user = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        var requiredAuthority = new SimpleGrantedAuthority(EnumRoles.ROLE_SYSTEM_ADMIN.getMessage());
+        return user.getAuthorities().contains(requiredAuthority);
     }
+
 }

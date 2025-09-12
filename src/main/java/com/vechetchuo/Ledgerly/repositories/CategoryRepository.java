@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
-    @Query("SELECT c FROM Category c WHERE (:name IS NULL OR :name = '' OR c.name = :name)")
-    Page<Category> findDynamic(@Param("name") String name, Pageable pageable);
+    @Query("SELECT c FROM Category c WHERE " +
+    "(:name IS NULL OR :name = '' OR c.name = :name) AND " +
+    "(:userId IS NULL OR :userId = '' OR a.userId = :userId)")
+    Page<Category> findDynamic(@Param("name") String name, @Param("userId") String userId, Pageable pageable);
 }
