@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 public interface TransactionRepository extends JpaRepository<Transaction, Integer> {
     @Query("SELECT t FROM Transaction t WHERE " +
     "(:memo IS NULL OR :memo = '' OR t.memo = :memo) AND " +
-    "(:userId IS NULL OR :userId = '' OR a.userId = :userId)")
+    "(:userId IS NULL OR :userId = '' OR t.userId = :userId)")
     Page<Transaction> findDynamic(@Param("memo") String name, @Param("userId") String userId, Pageable pageable);
 
 }
