@@ -35,8 +35,17 @@ public class CategoryService {
             // get current Category
             var currentCategory = categoryRepository.findById(req.getId()).orElse(null);
 
+            //get userId
+            var userId = userService.getUserId();
+
             // check if brand not exists
             if (currentCategory == null) {
+                logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.NOT_FOUND));
+                return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
+            }
+
+            // prevent user a view user b category
+            if (!currentCategory.getUserId().equals(userId)) {
                 logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.NOT_FOUND));
                 return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
             }
@@ -127,6 +136,12 @@ public class CategoryService {
                 return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
             }
 
+            // prevent user a update user b category
+            if (!currentCategory.getUserId().equals(userId)) {
+                logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.NOT_FOUND));
+                return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
+            }
+
             // get some infos
             var status = globalParamRepository.findStatusByKeyNameAndType(EnumGlobalParam.Deleted.getMessage(), EnumGlobalParamType.CategoryxxxStatus.getMessage());
             var parent = categoryRepository.findById(req.getParentId()).orElse(null);
@@ -178,6 +193,12 @@ public class CategoryService {
 
             // check if brand not exists
             if (currentCategory == null) {
+                logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.NOT_FOUND));
+                return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
+            }
+
+            // prevent user a delete user b category
+            if (!currentCategory.getUserId().equals(userId)) {
                 logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.NOT_FOUND));
                 return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
             }

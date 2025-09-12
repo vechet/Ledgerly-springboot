@@ -35,8 +35,17 @@ public class AccountService {
             // get current Account
             var currentAccount = accountRepository.findById(req.getId()).orElse(null);
 
+            //get userId
+            var userId = userService.getUserId();
+
             // check if brand not exists
             if (currentAccount == null) {
+                logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.NOT_FOUND));
+                return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
+            }
+
+            // prevent user a view user b brand
+            if (!currentAccount.getUserId().equals(userId)) {
                 logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.NOT_FOUND));
                 return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
             }
@@ -123,6 +132,13 @@ public class AccountService {
                 return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
             }
 
+            // prevent user a update user b account and allow only system admin
+            var isSystemAdminUser = userService.isSystemAdminUser();
+            if (!currentAccount.getUserId().equals(userId) && !isSystemAdminUser) {
+                logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.NOT_FOUND));
+                return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
+            }
+
             // get status
             var status = globalParamRepository.findStatusByKeyNameAndType(EnumGlobalParam.Deleted.getMessage(), EnumGlobalParamType.AccountxxxStatus.getMessage());
 
@@ -173,6 +189,12 @@ public class AccountService {
 
             // check if brand not exists
             if (currentAccount == null) {
+                logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.NOT_FOUND));
+                return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
+            }
+
+            // prevent user a delete user b account
+            if (!currentAccount.getUserId().equals(userId)) {
                 logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.NOT_FOUND));
                 return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
             }

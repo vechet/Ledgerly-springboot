@@ -35,8 +35,17 @@ public class TransactionService {
             // get current Transaction
             var currentTransaction = transactionRepository.findById(req.getId()).orElse(null);
 
+            //get userId
+            var userId = userService.getUserId();
+
             // check if brand not exists
             if (currentTransaction == null) {
+                logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.NOT_FOUND));
+                return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
+            }
+
+            // prevent user a view user b transaction
+            if (!currentTransaction.getUserId().equals(userId)) {
                 logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.NOT_FOUND));
                 return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
             }
@@ -129,6 +138,12 @@ public class TransactionService {
                 return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
             }
 
+            // prevent user a update user b account
+            if (!currentTransaction.getUserId().equals(userId)) {
+                logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.NOT_FOUND));
+                return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
+            }
+
             // get status
             var status = globalParamRepository.findStatusByKeyNameAndType(EnumGlobalParam.Deleted.getMessage(), EnumGlobalParamType.TransactionxxxStatus.getMessage());
             var account = accountRepository.findById(req.getAccountId()).orElse(null);
@@ -184,6 +199,12 @@ public class TransactionService {
 
             // check if brand not exists
             if (currentTransaction == null) {
+                logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.NOT_FOUND));
+                return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
+            }
+
+            // prevent user a delete user b account
+            if (!currentTransaction.getUserId().equals(userId)) {
                 logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.NOT_FOUND));
                 return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
             }
