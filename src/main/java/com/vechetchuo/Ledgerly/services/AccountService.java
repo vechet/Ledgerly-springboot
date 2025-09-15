@@ -71,8 +71,9 @@ public class AccountService {
             var isSystemAdminUser = userService.isSystemAdminUser();
             String currentUser = isSystemAdminUser ? null : userId;
 
+            var globalParam = globalParamRepository.findStatusByKeyNameAndType(EnumGlobalParam.Normal.getMessage(), EnumGlobalParamType.AccountxxxStatus.getMessage());
             PageRequest pageRequest = PaginationUtil.toPageRequest(req);
-            Page<Account> accountPage = accountRepository.findDynamic(req.getFilter().getSearch(), currentUser, pageRequest);
+            Page<Account> accountPage = accountRepository.findDynamic(req.getFilter().getSearch(), currentUser, globalParam, pageRequest);
             var accounts = accountPage.getContent().stream().map(mapper::toGetsDto).collect(Collectors.toList());
             var pageInfo = new PageInfo(req.getPage(), req.getPageSize(), accountPage.getTotalPages(), accountPage.getTotalElements());
 

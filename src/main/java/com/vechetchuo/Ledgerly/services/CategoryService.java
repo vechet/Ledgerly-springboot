@@ -69,8 +69,9 @@ public class CategoryService {
             var isSystemAdminUser = userService.isSystemAdminUser();
             String currentUser = isSystemAdminUser ? null : userId;
 
+            var globalParam = globalParamRepository.findStatusByKeyNameAndType(EnumGlobalParam.Normal.getMessage(), EnumGlobalParamType.CategoryxxxStatus.getMessage());
             PageRequest pageRequest = PaginationUtil.toPageRequest(req);
-            Page<Category> categoryPage = categoryRepository.findDynamic(req.getFilter().getSearch(), currentUser, pageRequest);
+            Page<Category> categoryPage = categoryRepository.findDynamic(req.getFilter().getSearch(), currentUser, globalParam, pageRequest);
             var categories = categoryPage.getContent().stream().map(mapper::toGetsDto).collect(Collectors.toList());
             var pageInfo = new PageInfo(req.getPage(), req.getPageSize(), categoryPage.getTotalPages(), categoryPage.getTotalElements());
 
