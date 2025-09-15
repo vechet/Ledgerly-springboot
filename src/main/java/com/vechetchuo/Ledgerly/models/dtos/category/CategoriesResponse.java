@@ -13,4 +13,5 @@ public class CategoriesResponse {
     private int parentId;
     private String parentName;
     private String memo;
+    private boolean defaultCategory;
 }

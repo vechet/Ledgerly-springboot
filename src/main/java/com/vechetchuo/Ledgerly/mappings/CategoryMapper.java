@@ -10,10 +10,12 @@ import org.mapstruct.Mapping;
 public interface CategoryMapper {
     @Mapping(source = "parent.id", target = "parentId")
     @Mapping(source = "parent.name", target = "parentName")
+    @Mapping(source = "systemValue", target = "defaultCategory")
     GetCategoryResponse toGetDto(Category entity);
 
     @Mapping(source = "parent.id", target = "parentId")
     @Mapping(source = "parent.name", target = "parentName")
+    @Mapping(source = "systemValue", target = "defaultCategory")
     CategoriesResponse toGetsDto(Category entity);
 
     @Mapping(target = "id", ignore = true)
@@ -32,6 +34,7 @@ public interface CategoryMapper {
 
     @Mapping(source = "parent.id", target = "parentId")
     @Mapping(source = "parent.name", target = "parentName")
+    @Mapping(source = "systemValue", target = "defaultCategory")
     CreateCategoryResponse toCreateDto(Category entity);
 
     @Mapping(target = "iconName", ignore = true)
@@ -49,6 +52,7 @@ public interface CategoryMapper {
 
     @Mapping(source = "parent.id", target = "parentId")
     @Mapping(source = "parent.name", target = "parentName")
+    @Mapping(source = "systemValue", target = "defaultCategory")
     UpdateCategoryResponse toUpdateDto(Category entity);
 
     @Mapping(target = "name", ignore = true)
@@ -70,6 +74,7 @@ public interface CategoryMapper {
 
     @Mapping(source = "parent.id", target = "parentId")
     @Mapping(source = "parent.name", target = "parentName")
+    @Mapping(source = "systemValue", target = "defaultCategory")
     @Mapping(source = "globalParam.id", target = "statusId")
     @Mapping(source = "globalParam.name", target = "statusName")
     RecordAuditLogCategory toAuditLogDto(Category entity);

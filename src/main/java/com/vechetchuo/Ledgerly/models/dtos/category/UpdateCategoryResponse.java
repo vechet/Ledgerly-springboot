@@ -13,4 +13,5 @@ public class UpdateCategoryResponse {
     private int parentId;
     private String parentName;
     private String memo;
+    private boolean defaultCategory;
 }

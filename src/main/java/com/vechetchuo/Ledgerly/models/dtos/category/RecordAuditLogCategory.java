@@ -16,6 +16,7 @@ public class RecordAuditLogCategory {
     private int parentId;
     private String parentName;
     private String memo;
+    private boolean defaultCategory;
     private int statusId;
     private String statusName;
     private String createdBy;
