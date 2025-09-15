@@ -11,7 +11,10 @@ public enum ApiResponseStatus {
     UNAUTHORIZED(401, "Unauthorized"),
     DUPLICATION_USERNAME(409, "Duplicate username"),
     FORBIDDEN(403, "Forbidden"),
-    ALREADY_DELETE(422, "Cannot update or delete record that already deleted.");
+    ALREADY_DELETE(422, "Cannot update or delete record that already deleted."),
+    CANNOT_DELETE_DEFAULT_CATEGORY(423, "Cannot delete default category"),
+    ACCOUNT_ALREADY_DELETED(1000, "This account is not exits"),
+    CATEGORY_ALREADY_DELETED(1001, "This category is  not exits");
 
     private final int code;
     private final String message;

@@ -37,6 +37,7 @@ public class TransactionService {
 
             //get userId
             var userId = userService.getUserId();
+            var isSystemAdminUser = userService.isSystemAdminUser();
 
             // check if brand not exists
             if (currentTransaction == null) {
@@ -45,9 +46,11 @@ public class TransactionService {
             }
 
             // prevent user a view user b transaction
-            if (!currentTransaction.getUserId().equals(userId)) {
-                logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.NOT_FOUND));
-                return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
+            if(!isSystemAdminUser){
+                if (!currentTransaction.getUserId().equals(userId)) {
+                    logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.NOT_FOUND));
+                    return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
+                }
             }
 
             // Response
@@ -66,8 +69,9 @@ public class TransactionService {
             var isSystemAdminUser = userService.isSystemAdminUser();
             String currentUser = isSystemAdminUser ? null : userId;
 
+            var globalParam = globalParamRepository.findStatusByKeyNameAndType(EnumGlobalParam.Normal.getMessage(), EnumGlobalParamType.TransactionxxxStatus.getMessage());
             PageRequest pageRequest = PaginationUtil.toPageRequest(req);
-            Page<Transaction> transactionPage = transactionRepository.findDynamic(req.getFilter().getSearch(), currentUser, pageRequest);
+            Page<Transaction> transactionPage = transactionRepository.findDynamic(req.getFilter().getSearch(), currentUser, globalParam, pageRequest);
             var transactions = transactionPage.getContent().stream().map(mapper::toGetsDto).collect(Collectors.toList());
             var pageInfo = new PageInfo(req.getPage(), req.getPageSize(), transactionPage.getTotalPages(), transactionPage.getTotalElements());
 
@@ -83,13 +87,25 @@ public class TransactionService {
     @Transactional
     public ApiResponse<CreateTransactionResponse> createTransaction(CreateTransactionRequest req){
         try{
+            // check if account not exists
+            var account = accountRepository.findById(req.getAccountId()).orElse(null);
+            if (account == null) {
+                logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.ACCOUNT_ALREADY_DELETED));
+                return ApiResponse.failure(ApiResponseStatus.ACCOUNT_ALREADY_DELETED);
+            }
+
+            // check if category not exists
+            var category = categoryRepository.findById(req.getCategoryId()).orElse(null);
+            if (category == null) {
+                logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.CATEGORY_ALREADY_DELETED));
+                return ApiResponse.failure(ApiResponseStatus.CATEGORY_ALREADY_DELETED);
+            }
+
             //get userId
             var userId = userService.getUserId();
 
             // get some infos
             var status = globalParamRepository.findStatusByKeyNameAndType(EnumGlobalParam.Normal.getMessage(), EnumGlobalParamType.TransactionxxxStatus.getMessage());
-            var account = accountRepository.findById(req.getAccountId()).orElse(null);
-            var category = categoryRepository.findById(req.getCategoryId()).orElse(null);
 
             // mapping dto to entity
             var newTransaction = mapper.toCreateEntity(req);

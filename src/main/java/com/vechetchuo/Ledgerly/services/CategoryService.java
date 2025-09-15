@@ -37,6 +37,7 @@ public class CategoryService {
 
             //get userId
             var userId = userService.getUserId();
+            var isSystemAdminUser = userService.isSystemAdminUser();
 
             // check if brand not exists
             if (currentCategory == null) {
@@ -45,9 +46,11 @@ public class CategoryService {
             }
 
             // prevent user a view user b category
-            if (!currentCategory.getUserId().equals(userId)) {
-                logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.NOT_FOUND));
-                return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
+            if(!isSystemAdminUser){
+                if (!currentCategory.getUserId().equals(userId)) {
+                    logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.NOT_FOUND));
+                    return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
+                }
             }
 
             // Response
@@ -191,7 +194,7 @@ public class CategoryService {
             // get current category
             var currentCategory = categoryRepository.findById(req.getId()).orElse(null);
 
-            // check if brand not exists
+            // check if category not exists
             if (currentCategory == null) {
                 logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.NOT_FOUND));
                 return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);

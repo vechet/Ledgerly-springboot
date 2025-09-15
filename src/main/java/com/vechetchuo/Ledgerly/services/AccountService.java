@@ -9,6 +9,7 @@ import com.vechetchuo.Ledgerly.models.dtos.account.*;
 import com.vechetchuo.Ledgerly.repositories.AccountRepository;
 import com.vechetchuo.Ledgerly.repositories.AuditLogRepository;
 import com.vechetchuo.Ledgerly.repositories.GlobalParamRepository;
+import com.vechetchuo.Ledgerly.repositories.TransactionRepository;
 import com.vechetchuo.Ledgerly.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,7 @@ public class AccountService {
     @Autowired private GlobalParamRepository globalParamRepository;
     @Autowired private AccountMapper mapper;
     @Autowired private UserService userService;
+    @Autowired private TransactionRepository transactionRepository;
 
     public ApiResponse<GetAccountResponse> getAccount(GetAccountRequest req){
         try{
@@ -37,6 +39,7 @@ public class AccountService {
 
             //get userId
             var userId = userService.getUserId();
+            var isSystemAdminUser = userService.isSystemAdminUser();
 
             // check if brand not exists
             if (currentAccount == null) {
@@ -44,10 +47,12 @@ public class AccountService {
                 return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
             }
 
-            // prevent user a view user b brand
-            if (!currentAccount.getUserId().equals(userId)) {
-                logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.NOT_FOUND));
-                return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
+            // prevent user a view user b account
+            if(!isSystemAdminUser){
+                if (!currentAccount.getUserId().equals(userId)) {
+                    logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.NOT_FOUND));
+                    return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
+                }
             }
 
             // Response
@@ -215,6 +220,14 @@ public class AccountService {
             currentAccount.setModifiedBy(userId);
             currentAccount.setModifiedDate(LocalDateTime.now());
             accountRepository.save(currentAccount);
+
+            // delete related transaction
+            var deleteTranStatus = globalParamRepository.findStatusByKeyNameAndType(EnumGlobalParam.Deleted.getMessage(), EnumGlobalParamType.TransactionxxxStatus.getMessage());
+            var transactions = transactionRepository.findByAccountId(req.getId());
+            var deleteTrans = transactions.stream()
+                    .peek(t -> t.setGlobalParam(deleteTranStatus))
+                    .collect(Collectors.toList());
+            transactionRepository.saveAll(deleteTrans);
 
             // Add audit log
             var accountAuditLog = new AuditLog();
