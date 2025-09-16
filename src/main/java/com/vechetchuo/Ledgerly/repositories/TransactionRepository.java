@@ -15,7 +15,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Intege
     @Query("SELECT t FROM Transaction t WHERE " +
     "(:memo IS NULL OR :memo = '' OR t.memo = :memo) AND " +
     "(:userId IS NULL OR :userId = '' OR t.userId = :userId) AND " +
-    "(:globalParam IS NULL OR :globalParam = '' OR t.globalParam = :globalParam)")
+    "(:globalParam IS NULL OR t.globalParam = :globalParam)")
     Page<Transaction> findDynamic(@Param("memo") String name, @Param("userId") String userId, @Param("globalParam") GlobalParam globalParam, Pageable pageable);
 
     List<Transaction> findByAccountId(int accountId);

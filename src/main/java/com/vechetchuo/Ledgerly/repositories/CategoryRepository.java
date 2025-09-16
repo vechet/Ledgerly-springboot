@@ -15,6 +15,6 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
     @Query("SELECT c FROM Category c WHERE " +
     "(:name IS NULL OR :name = '' OR c.name = :name) AND " +
     "(:userId IS NULL OR :userId = '' OR c.userId = :userId) AND " +
-    "(:globalParam IS NULL OR :globalParam = '' OR c.globalParam = :globalParam)")
+    "(:globalParam IS NULL OR c.globalParam = :globalParam)")
     Page<Category> findDynamic(@Param("name") String name, @Param("userId") String userId, @Param("globalParam") GlobalParam globalParam, Pageable pageable);
 }

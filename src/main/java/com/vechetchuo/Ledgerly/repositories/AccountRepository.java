@@ -14,6 +14,6 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
     @Query("SELECT a FROM Account a WHERE " +
     "(:name IS NULL OR :name = '' OR a.name = :name) AND " +
     "(:userId IS NULL OR :userId = '' OR a.userId = :userId) AND " +
-    "(:globalParam IS NULL OR :globalParam = '' OR a.globalParam = :globalParam)")
+    "(:globalParam IS NULL OR a.globalParam = :globalParam)")
     Page<Account> findDynamic(@Param("name") String name, @Param("userId") String userId, @Param("globalParam") GlobalParam globalParam, Pageable pageable);
 }

@@ -128,6 +128,7 @@ public class AccountService {
         try{
             //get userId
             var userId = userService.getUserId();
+            var isSystemAdminUser = userService.isSystemAdminUser();
 
             // get current account
             var currentAccount = accountRepository.findById(req.getId()).orElse(null);
@@ -138,11 +139,12 @@ public class AccountService {
                 return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
             }
 
-            // prevent user a update user b account and allow only system admin
-            var isSystemAdminUser = userService.isSystemAdminUser();
-            if (!currentAccount.getUserId().equals(userId) && !isSystemAdminUser) {
-                logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.NOT_FOUND));
-                return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
+            // prevent user a view user b account
+            if(!isSystemAdminUser){
+                if (!currentAccount.getUserId().equals(userId)) {
+                    logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.NOT_FOUND));
+                    return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
+                }
             }
 
             // get status
@@ -159,7 +161,7 @@ public class AccountService {
             currentAccount.setName(req.getName());
             currentAccount.setCurrency(req.getCurrency());
             currentAccount.setMemo(req.getMemo());
-            currentAccount.setUserId(userId);
+            currentAccount.setUserId(isSystemAdminUser ? currentAccount.getUserId() : userId);
             currentAccount.setModifiedBy(userId);
             currentAccount.setModifiedDate(LocalDateTime.now());
             accountRepository.save(currentAccount);
@@ -189,6 +191,7 @@ public class AccountService {
         try{
             //get userId
             var userId = userService.getUserId();
+            var isSystemAdminUser = userService.isSystemAdminUser();
 
             // get current account
             var currentAccount = accountRepository.findById(req.getId()).orElse(null);
@@ -199,10 +202,12 @@ public class AccountService {
                 return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
             }
 
-            // prevent user a delete user b account
-            if (!currentAccount.getUserId().equals(userId)) {
-                logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.NOT_FOUND));
-                return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
+            // prevent user a view user b account
+            if(!isSystemAdminUser){
+                if (!currentAccount.getUserId().equals(userId)) {
+                    logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.NOT_FOUND));
+                    return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
+                }
             }
 
             // get status
@@ -217,7 +222,7 @@ public class AccountService {
 
             // update current account
             currentAccount.setGlobalParam(status);
-            currentAccount.setUserId(userId);
+            currentAccount.setUserId(isSystemAdminUser ? currentAccount.getUserId() : userId);
             currentAccount.setModifiedBy(userId);
             currentAccount.setModifiedDate(LocalDateTime.now());
             accountRepository.save(currentAccount);
