@@ -130,6 +130,7 @@ public class CategoryService {
         try{
             //get userId
             var userId = userService.getUserId();
+            var isSystemAdminUser = userService.isSystemAdminUser();
 
             // get current category
             var currentCategory = categoryRepository.findById(req.getId()).orElse(null);
@@ -140,10 +141,12 @@ public class CategoryService {
                 return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
             }
 
-            // prevent user a update user b category
-            if (!currentCategory.getUserId().equals(userId)) {
-                logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.NOT_FOUND));
-                return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
+            // prevent user a view user b account
+            if(!isSystemAdminUser){
+                if (!currentCategory.getUserId().equals(userId)) {
+                    logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.NOT_FOUND));
+                    return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
+                }
             }
 
             // get some infos
@@ -161,7 +164,7 @@ public class CategoryService {
             currentCategory.setName(req.getName());
             currentCategory.setParent(parent);
             currentCategory.setMemo(req.getMemo());
-            currentCategory.setUserId(userId);
+            currentCategory.setUserId(isSystemAdminUser ? currentCategory.getUserId() : userId);
             currentCategory.setModifiedBy(userId);
             currentCategory.setModifiedDate(LocalDateTime.now());
             categoryRepository.save(currentCategory);
@@ -191,6 +194,7 @@ public class CategoryService {
         try{
             //get userId
             var userId = userService.getUserId();
+            var isSystemAdminUser = userService.isSystemAdminUser();
 
             // get current category
             var currentCategory = categoryRepository.findById(req.getId()).orElse(null);
@@ -201,10 +205,12 @@ public class CategoryService {
                 return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
             }
 
-            // prevent user a delete user b category
-            if (!currentCategory.getUserId().equals(userId)) {
-                logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.NOT_FOUND));
-                return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
+            // prevent user a view user b account
+            if(!isSystemAdminUser){
+                if (!currentCategory.getUserId().equals(userId)) {
+                    logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.NOT_FOUND));
+                    return ApiResponse.failure(ApiResponseStatus.NOT_FOUND);
+                }
             }
 
             // get status
@@ -219,7 +225,7 @@ public class CategoryService {
 
             // update current category
             currentCategory.setGlobalParam(status);
-            currentCategory.setUserId(userId);
+            currentCategory.setUserId(isSystemAdminUser ? currentCategory.getUserId() : userId);
             currentCategory.setModifiedBy(userId);
             currentCategory.setModifiedDate(LocalDateTime.now());
             categoryRepository.save(currentCategory);

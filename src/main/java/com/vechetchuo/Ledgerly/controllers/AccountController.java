@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Account", description = "the Account Api")
+@Tag(name = "Account", description = "the account api")
 @RestController
 @RequestMapping("/api")
 public class AccountController {

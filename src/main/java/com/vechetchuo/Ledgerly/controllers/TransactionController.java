@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Transaction", description = "the Transaction Api")
+@Tag(name = "Transaction", description = "the transaction api")
 @RestController
 @RequestMapping("/api")
 public class TransactionController {

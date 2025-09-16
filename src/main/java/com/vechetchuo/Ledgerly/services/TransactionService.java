@@ -144,6 +144,7 @@ public class TransactionService {
         try{
             //get userId
             var userId = userService.getUserId();
+            var isSystemAdminUser = userService.isSystemAdminUser();
 
             // get current transaction
             var currentTransaction = transactionRepository.findById(req.getId()).orElse(null);
@@ -179,7 +180,7 @@ public class TransactionService {
             currentTransaction.setTransactionDate(req.getTransactionDate());
             currentTransaction.setType(req.getType());
             currentTransaction.setMemo(req.getMemo());
-            currentTransaction.setUserId(userId);
+            currentTransaction.setUserId(isSystemAdminUser ? currentTransaction.getUserId() : userId);
             currentTransaction.setModifiedBy(userId);
             currentTransaction.setModifiedDate(LocalDateTime.now());
             transactionRepository.save(currentTransaction);
@@ -209,6 +210,7 @@ public class TransactionService {
         try{
             //get userId
             var userId = userService.getUserId();
+            var isSystemAdminUser = userService.isSystemAdminUser();
 
             // get current transaction
             var currentTransaction = transactionRepository.findById(req.getId()).orElse(null);
@@ -237,7 +239,7 @@ public class TransactionService {
 
             // update current transaction
             currentTransaction.setGlobalParam(status);
-            currentTransaction.setUserId(userId);
+            currentTransaction.setUserId(isSystemAdminUser ? currentTransaction.getUserId() : userId);
             currentTransaction.setModifiedBy(userId);
             currentTransaction.setModifiedDate(LocalDateTime.now());
             transactionRepository.save(currentTransaction);
