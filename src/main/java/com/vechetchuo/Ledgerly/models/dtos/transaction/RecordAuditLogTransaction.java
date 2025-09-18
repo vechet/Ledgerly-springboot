@@ -22,6 +22,7 @@ public class RecordAuditLogTransaction {
     private String categoryName;
     private String memo;
     private String type;
+    private String currency;
     private int statusId;
     private String statusName;
     private String createdBy;

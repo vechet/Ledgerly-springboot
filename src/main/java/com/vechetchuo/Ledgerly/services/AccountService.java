@@ -1,5 +1,6 @@
 package com.vechetchuo.Ledgerly.services;
 
+import com.vechetchuo.Ledgerly.enums.EnumCurrency;
 import com.vechetchuo.Ledgerly.enums.EnumGlobalParam;
 import com.vechetchuo.Ledgerly.enums.EnumGlobalParamType;
 import com.vechetchuo.Ledgerly.mappings.AccountMapper;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 @Service
@@ -92,6 +94,12 @@ public class AccountService {
             //get userId
             var userId = userService.getUserId();
 
+            //check invalid currency
+            if (!EnumCurrency.isValid(req.getCurrency())) {
+                logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.INVALID_CURRENCY));
+                return ApiResponse.failure(ApiResponseStatus.INVALID_CURRENCY);
+            }
+
             // get status
             var status = globalParamRepository.findStatusByKeyNameAndType(EnumGlobalParam.Normal.getMessage(), EnumGlobalParamType.AccountxxxStatus.getMessage());
 
@@ -129,6 +137,12 @@ public class AccountService {
             //get userId
             var userId = userService.getUserId();
             var isSystemAdminUser = userService.isSystemAdminUser();
+
+            //check invalid currency
+            if (!EnumCurrency.isValid(req.getCurrency())) {
+                logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.INVALID_CURRENCY));
+                return ApiResponse.failure(ApiResponseStatus.INVALID_CURRENCY);
+            }
 
             // get current account
             var currentAccount = accountRepository.findById(req.getId()).orElse(null);

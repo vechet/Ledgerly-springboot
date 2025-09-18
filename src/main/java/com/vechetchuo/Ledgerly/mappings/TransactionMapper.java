@@ -12,12 +12,14 @@ public interface TransactionMapper {
     @Mapping(source = "account.name", target = "accountName")
     @Mapping(source = "category.id", target = "categoryId")
     @Mapping(source = "category.name", target = "categoryName")
+    @Mapping(source = "account.currency", target = "currency")
     GetTransactionResponse toGetDto(Transaction entity);
 
     @Mapping(source = "account.id", target = "accountId")
     @Mapping(source = "account.name", target = "accountName")
     @Mapping(source = "category.id", target = "categoryId")
     @Mapping(source = "category.name", target = "categoryName")
+    @Mapping(source = "account.currency", target = "currency")
     TransactionsResponse toGetsDto(Transaction entity);
 
     @Mapping(target = "id", ignore = true)
@@ -35,6 +37,7 @@ public interface TransactionMapper {
     @Mapping(source = "account.name", target = "accountName")
     @Mapping(source = "category.id", target = "categoryId")
     @Mapping(source = "category.name", target = "categoryName")
+    @Mapping(source = "account.currency", target = "currency")
     CreateTransactionResponse toCreateDto(Transaction entity);
 
     @Mapping(target = "userId", ignore = true)
@@ -51,6 +54,7 @@ public interface TransactionMapper {
     @Mapping(source = "account.name", target = "accountName")
     @Mapping(source = "category.id", target = "categoryId")
     @Mapping(source = "category.name", target = "categoryName")
+    @Mapping(source = "account.currency", target = "currency")
     UpdateTransactionResponse toUpdateDto(Transaction entity);
 
     @Mapping(target = "amount", ignore = true)
@@ -75,5 +79,6 @@ public interface TransactionMapper {
     @Mapping(source = "category.name", target = "categoryName")
     @Mapping(source = "globalParam.id", target = "statusId")
     @Mapping(source = "globalParam.name", target = "statusName")
+    @Mapping(source = "account.currency", target = "currency")
     RecordAuditLogTransaction toAuditLogDto(Transaction entity);
 }

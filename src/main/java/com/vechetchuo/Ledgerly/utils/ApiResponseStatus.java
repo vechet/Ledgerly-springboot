@@ -15,6 +15,8 @@ public enum ApiResponseStatus {
     ALREADY_DELETE(422, "Cannot update or delete record that already deleted."),
     CANNOT_DELETE_DEFAULT_CATEGORY(423, "Cannot delete default category"),
     ACCOUNT_ALREADY_DELETED(1000, "This account is not exits"),
+    INVALID_CURRENCY(1003, "Invalid currency"),
+    INVALID_TYPE(1004, "Invalid type"),
     CATEGORY_ALREADY_DELETED(1001, "This category is  not exits");
 
     private final int code;

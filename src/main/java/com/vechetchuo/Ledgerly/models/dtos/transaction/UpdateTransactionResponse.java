@@ -20,4 +20,5 @@ public class UpdateTransactionResponse {
     private LocalDateTime transactionDate;
     private String memo;
     private String type;
+    private String currency;
 }

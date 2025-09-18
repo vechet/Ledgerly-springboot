@@ -1,7 +1,9 @@
 package com.vechetchuo.Ledgerly.services;
 
+import com.vechetchuo.Ledgerly.enums.EnumCurrency;
 import com.vechetchuo.Ledgerly.enums.EnumGlobalParam;
 import com.vechetchuo.Ledgerly.enums.EnumGlobalParamType;
+import com.vechetchuo.Ledgerly.enums.EnumType;
 import com.vechetchuo.Ledgerly.mappings.TransactionMapper;
 import com.vechetchuo.Ledgerly.models.domains.Transaction;
 import com.vechetchuo.Ledgerly.models.domains.AuditLog;
@@ -87,6 +89,12 @@ public class TransactionService {
     @Transactional
     public ApiResponse<CreateTransactionResponse> createTransaction(CreateTransactionRequest req){
         try{
+            //check invalid type
+            if (!EnumType.isValid(req.getType())) {
+                logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.INVALID_TYPE));
+                return ApiResponse.failure(ApiResponseStatus.INVALID_TYPE);
+            }
+
             // check if account not exists
             var account = accountRepository.findById(req.getAccountId()).orElse(null);
             if (account == null) {
@@ -145,6 +153,12 @@ public class TransactionService {
             //get userId
             var userId = userService.getUserId();
             var isSystemAdminUser = userService.isSystemAdminUser();
+
+            //check invalid type
+            if (!EnumType.isValid(req.getType())) {
+                logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.INVALID_TYPE));
+                return ApiResponse.failure(ApiResponseStatus.INVALID_TYPE);
+            }
 
             // get current transaction
             var currentTransaction = transactionRepository.findById(req.getId()).orElse(null);
