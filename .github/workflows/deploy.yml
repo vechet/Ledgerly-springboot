@@ -41,7 +41,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
+            cd /root
             docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/ledgerly:latest
-            docker stop ledgerly || true
-            docker rm ledgerly || true
-            docker run -d --name ledgerly -p 8099:8099 ${{ secrets.DOCKER_HUB_USERNAME }}/ledgerly:latest
+            docker-compose --env-file .env down
+            docker-compose --env-file .env up -d
