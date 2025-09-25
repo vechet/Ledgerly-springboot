@@ -42,6 +42,9 @@ public class JwtUtil {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", user.getId());
         claims.put("userName", user.getUsername());
+        claims.put("phone", user.getPhone());
+        claims.put("email", user.getEmail());
+        claims.put("address", user.getAddress());
         claims.put("roles", user.getUserRoles().stream()
                 .map(UserRole::getRole)              // go from UserRole to Role
                 .map(Role::getName)                  // get role name

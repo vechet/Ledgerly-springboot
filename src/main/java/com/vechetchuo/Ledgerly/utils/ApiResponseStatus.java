@@ -8,6 +8,8 @@ public enum ApiResponseStatus {
     BAD_REQUEST(400, "Bad Request"),
     SUCCESS(0, "Success"),
     NOT_FOUND(404, "Not Found"),
+    EMAIL_NOT_FOUND(404, "Email not found"),
+    USER_NOT_FOUND(404, "User not found"),
     UNAUTHORIZED(401, "Unauthorized"),
     DUPLICATION_USERNAME(409, "Duplicate username"),
     FORBIDDEN(403, "Forbidden"),
@@ -18,6 +20,8 @@ public enum ApiResponseStatus {
     INVALID_CURRENCY(1003, "Invalid currency"),
     INVALID_TYPE(1004, "Invalid type"),
     LINK_EXPIRED(1005, "Link expired"),
+    INVALID_LINK(1006, "Invalid link"),
+    CURRENT_PASSWORD_INCORRECT(1007, "Current password is incorrect"),
     CATEGORY_ALREADY_DELETED(1001, "This category is  not exits");
 
     private final int code;

@@ -25,6 +25,8 @@ public class UserSeeder {
     @Value("${default_role}") private String default_role;
 
     public User seedSystemAdmin() {
+        if (userRepository.count() > 0) return new User();
+
         return userRepository.findByUsername(default_user).orElseGet(() -> {
             Role role = roleRepository.findByName(default_role).orElse(null);
 
