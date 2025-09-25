@@ -11,7 +11,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-@Hidden
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
     @Query("SELECT c FROM Category c WHERE " +

@@ -11,7 +11,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 
-@Hidden
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Integer> {
     @Query("SELECT t FROM Transaction t WHERE " +

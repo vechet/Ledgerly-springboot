@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Hidden
 @Repository
 public interface RoleClaimRepository extends JpaRepository<RoleClaim, Integer> {
     List<RoleClaim> findByRoleIdAndClaimType(int roleId, String claimType);
