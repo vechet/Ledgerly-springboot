@@ -17,6 +17,7 @@ public enum ApiResponseStatus {
     ACCOUNT_ALREADY_DELETED(1000, "This account is not exits"),
     INVALID_CURRENCY(1003, "Invalid currency"),
     INVALID_TYPE(1004, "Invalid type"),
+    LINK_EXPIRED(1005, "Link expired"),
     CATEGORY_ALREADY_DELETED(1001, "This category is  not exits");
 
     private final int code;

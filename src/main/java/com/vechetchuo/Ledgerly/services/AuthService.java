@@ -2,19 +2,14 @@ package com.vechetchuo.Ledgerly.services;
 
 import com.vechetchuo.Ledgerly.enums.EnumRoles;
 import com.vechetchuo.Ledgerly.mappings.UserMapper;
-import com.vechetchuo.Ledgerly.models.domains.AuditLog;
-import com.vechetchuo.Ledgerly.models.domains.Role;
-import com.vechetchuo.Ledgerly.models.domains.RoleClaim;
-import com.vechetchuo.Ledgerly.models.domains.UserRole;
+import com.vechetchuo.Ledgerly.models.domains.*;
 import com.vechetchuo.Ledgerly.models.dtos.auth.*;
-import com.vechetchuo.Ledgerly.repositories.AuditLogRepository;
-import com.vechetchuo.Ledgerly.repositories.RoleRepository;
-import com.vechetchuo.Ledgerly.repositories.UserRepository;
-import com.vechetchuo.Ledgerly.repositories.UserRoleRepository;
+import com.vechetchuo.Ledgerly.repositories.*;
 import com.vechetchuo.Ledgerly.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -24,11 +19,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Key;
 import java.time.LocalDateTime;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class AuthService {
+    @Value("${reset.password.expiration}")
+    private long resetPasswordExpiration;
+
+    @Value("${reset.password.url}")
+    private String resetPasswordUrl;
+
     private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
     @Autowired private UserRepository userRepository;
     @Autowired private JwtUtil jwtUtil;
@@ -38,6 +41,9 @@ public class AuthService {
     @Autowired private UserRoleRepository userRoleRepository;
     @Autowired private AuthenticationManager authenticationManager;
     @Autowired private PasswordEncoder passwordEncoder;
+    @Autowired private UserService userService;
+    @Autowired private PasswordResetTokenRepository passwordResetTokenRepository;
+    @Autowired private EmailService emailService;
 
     @Transactional
     public ApiResponse<RegisterResponse> register(RegisterRequest req){
@@ -138,5 +144,53 @@ public class AuthService {
         var user = userRepository.findById(id).orElse(null);
         var recordAuditLogUser = mapper.toAuditLogDto(user);
         return JsonConverterUtils.SerializeObject(recordAuditLogUser);
+    }
+
+    @Transactional
+    public ApiResponse<ForgotPasswordResponse> forgotPassword(ForgotPasswordRequest req){
+        try{
+            User user = userRepository.findByEmail(req.getEmail())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            String token = UUID.randomUUID().toString();
+            LocalDateTime expiry = LocalDateTime.now().plusMinutes(resetPasswordExpiration);
+
+            PasswordResetToken resetToken = new PasswordResetToken(token, expiry, user);
+            passwordResetTokenRepository.save(resetToken);
+
+            String link = resetPasswordUrl + token;
+            emailService.sendResetLink(user.getEmail(), link);
+
+            return ApiResponse.success(null);
+        }catch (Exception e){
+            logger.info(LoggerUtil.formatMessage(req, e.hashCode(), e.getMessage()));
+            return ApiResponse.failure(ApiResponseStatus.INTERNAL_ERROR);
+        }
+    }
+
+    @Transactional
+    public ApiResponse<ResetPasswordResponse> resetPassword(ResetPasswordRequest req){
+        try{
+            PasswordResetToken token = passwordResetTokenRepository.findById(req.getToken())
+                    .orElseThrow(() -> new RuntimeException("Invalid link"));
+
+            if (token.getExpiryDate().isBefore(LocalDateTime.now())) {
+                logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.LINK_EXPIRED));
+                return ApiResponse.failure(ApiResponseStatus.LINK_EXPIRED);
+            }
+
+            User user = userRepository.findById(token.getUser().getId())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            user.setPassword(passwordEncoder.encode(req.getNewPassword()));
+            userRepository.save(user);
+
+            passwordResetTokenRepository.delete(token); // Invalidate token
+
+            return ApiResponse.success(null);
+        }catch (Exception e){
+            logger.info(LoggerUtil.formatMessage(req, e.hashCode(), e.getMessage()));
+            return ApiResponse.failure(ApiResponseStatus.INTERNAL_ERROR);
+        }
     }
 }

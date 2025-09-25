@@ -1,9 +1,6 @@
 package com.vechetchuo.Ledgerly.controllers;
 
-import com.vechetchuo.Ledgerly.models.dtos.auth.LoginRequest;
-import com.vechetchuo.Ledgerly.models.dtos.auth.LoginResponse;
-import com.vechetchuo.Ledgerly.models.dtos.auth.RegisterRequest;
-import com.vechetchuo.Ledgerly.models.dtos.auth.RegisterResponse;
+import com.vechetchuo.Ledgerly.models.dtos.auth.*;
 import com.vechetchuo.Ledgerly.services.AuthService;
 import com.vechetchuo.Ledgerly.utils.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,5 +25,15 @@ public class AuthController {
     @PostMapping("/v1/auth/login")
     public ApiResponse<LoginResponse> login(@Valid @RequestBody LoginRequest req){
         return authService.login(req);
+    }
+
+    @PostMapping("/v1/auth/forgot-password")
+    public ApiResponse<ForgotPasswordResponse> forgotPassword(@Valid @RequestBody ForgotPasswordRequest req){
+        return authService.forgotPassword(req);
+    }
+
+    @PostMapping("/v1/auth/reset-password")
+    public ApiResponse<ResetPasswordResponse> resetPassword(@Valid @RequestBody ResetPasswordRequest req){
+        return authService.resetPassword(req);
     }
 }

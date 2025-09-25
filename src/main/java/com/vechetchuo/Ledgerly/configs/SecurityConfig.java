@@ -52,7 +52,8 @@ public class SecurityConfig {
                         .requestMatchers("/h2-console/**").permitAll()
                         // ✅ Auth endpoints
                         .requestMatchers("/api/v1/auth/**").permitAll()
-                        // Everything else requires auth
+                        // ✅ Allow Password Reset Page
+                        .requestMatchers("/reset-password").permitAll()                        // Everything else requires auth
                         .anyRequest().authenticated()
                 )
                 // H2 console needs this
