@@ -194,7 +194,7 @@ public class TransactionService {
             currentTransaction.setTransactionDate(req.getTransactionDate());
             currentTransaction.setType(req.getType());
             currentTransaction.setMemo(req.getMemo());
-            currentTransaction.setUserId(isSystemAdminUser ? currentTransaction.getUserId() : userId);
+            currentTransaction.setUserId(userId);
             currentTransaction.setModifiedBy(userId);
             currentTransaction.setModifiedDate(LocalDateTime.now());
             transactionRepository.save(currentTransaction);

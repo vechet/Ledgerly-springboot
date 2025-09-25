@@ -175,7 +175,7 @@ public class AccountService {
             currentAccount.setName(req.getName());
             currentAccount.setCurrency(req.getCurrency());
             currentAccount.setMemo(req.getMemo());
-            currentAccount.setUserId(isSystemAdminUser ? currentAccount.getUserId() : userId);
+            currentAccount.setUserId(userId);
             currentAccount.setModifiedBy(userId);
             currentAccount.setModifiedDate(LocalDateTime.now());
             accountRepository.save(currentAccount);

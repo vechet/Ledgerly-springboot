@@ -164,7 +164,7 @@ public class CategoryService {
             currentCategory.setName(req.getName());
             currentCategory.setParent(parent);
             currentCategory.setMemo(req.getMemo());
-            currentCategory.setUserId(isSystemAdminUser ? currentCategory.getUserId() : userId);
+            currentCategory.setUserId(userId);
             currentCategory.setModifiedBy(userId);
             currentCategory.setModifiedDate(LocalDateTime.now());
             categoryRepository.save(currentCategory);
