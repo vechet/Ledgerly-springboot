@@ -20,6 +20,8 @@ public class RoleSeeder {
     @Autowired private RoleClaimRepository roleClaimRepository;
 
     public void seed() {
+        if (roleRepository.count() > 0 && roleClaimRepository.count() > 0) return;
+
         // init roles and permissions
         Map<EnumRoles, List<EnumPermissions>> rolePermissions = new HashMap<>();
         rolePermissions.put(EnumRoles.ROLE_SYSTEM_ADMIN, Arrays.asList(EnumPermissions.values()));

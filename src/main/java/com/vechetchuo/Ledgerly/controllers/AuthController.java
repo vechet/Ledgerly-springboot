@@ -1,14 +1,12 @@
 package com.vechetchuo.Ledgerly.controllers;
 
-import com.vechetchuo.Ledgerly.models.dtos.auth.LoginRequest;
-import com.vechetchuo.Ledgerly.models.dtos.auth.LoginResponse;
-import com.vechetchuo.Ledgerly.models.dtos.auth.RegisterRequest;
-import com.vechetchuo.Ledgerly.models.dtos.auth.RegisterResponse;
+import com.vechetchuo.Ledgerly.models.dtos.auth.*;
 import com.vechetchuo.Ledgerly.services.AuthService;
 import com.vechetchuo.Ledgerly.utils.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,5 +26,27 @@ public class AuthController {
     @PostMapping("/v1/auth/login")
     public ApiResponse<LoginResponse> login(@Valid @RequestBody LoginRequest req){
         return authService.login(req);
+    }
+
+    @PostMapping("/v1/auth/forgot-password")
+    public ApiResponse<ForgotPasswordResponse> forgotPassword(@Valid @RequestBody ForgotPasswordRequest req){
+        return authService.forgotPassword(req);
+    }
+
+    @PostMapping("/v1/auth/reset-password")
+    public ApiResponse<ResetPasswordResponse> resetPassword(@Valid @RequestBody ResetPasswordRequest req){
+        return authService.resetPassword(req);
+    }
+
+    @PreAuthorize("hasAuthority('USER_CHANGE_PASSWORD')")
+    @PostMapping("/v1/auth/change-password")
+    public ApiResponse<ChangePasswordResponse> changePassword(@Valid @RequestBody ChangePasswordRequest req){
+        return authService.changePassword(req);
+    }
+
+    @PreAuthorize("hasAuthority('USER_INFO')")
+    @PostMapping("/v1/auth/user-info")
+    public ApiResponse<UserInfoResponse> userInfo(@Valid @RequestBody UserInfoRequest req){
+        return authService.userInfo(req);
     }
 }

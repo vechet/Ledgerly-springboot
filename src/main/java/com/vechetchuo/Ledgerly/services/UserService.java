@@ -21,6 +21,25 @@ public class UserService {
         return user.getUsername();
     }
 
+    public String getEmail(){
+        var user = (UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return user.getEmail();
+    }
+
+    public String getPhone(){
+        var user = (UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return user.getPhone();
+    }
+
+    public String getAddress(){
+        var user = (UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return user.getAddress();
+    }
+
+    public UserPrincipal getUserPrincipal(){
+        return (UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
     public boolean isSystemAdminUser() {
         var user = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         var requiredAuthority = new SimpleGrantedAuthority(EnumRoles.ROLE_SYSTEM_ADMIN.getMessage());

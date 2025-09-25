@@ -4,14 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginResponse {
+public class ResetPasswordRequest {
     private String token;
-    private long expiresIn;
-    private UserInfoResponse user;
-
+    private String newPassword;
 }

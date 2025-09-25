@@ -12,15 +12,9 @@ import java.time.LocalDateTime;
 public class RecordAuditLogAuth {
     private String id;
     private String username;
+    private String password;
     private boolean enabled;
     private String phone;
     private String email;
     private String address;
-//    private String memo;
-//    private int statusId;
-//    private String statusName;
-//    private String createdBy;
-//    private LocalDateTime createdDate;
-//    private String modifiedBy;
-//    private LocalDateTime modifiedDate;
 }

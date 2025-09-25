@@ -35,6 +35,10 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserRole> userRoles;
 
+    @JsonIgnoreProperties
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PasswordResetToken> passwordResetTokens;
+
     @PrePersist
     public void assignId() {
         if (this.id == null || this.id.isEmpty()) {
