@@ -22,13 +22,15 @@ import java.io.IOException;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
-    @Autowired private JwtUtil jwtUtil;
-    @Autowired private CustomUserDetailsService userDetailsService;
+    @Autowired
+    private JwtUtil jwtUtil;
+    @Autowired
+    private CustomUserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain)
+            HttpServletResponse response,
+            FilterChain filterChain)
             throws ServletException, IOException {
 
         String authHeader = request.getHeader("Authorization");
@@ -52,9 +54,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
                 if (jwtUtil.validateToken(token, userDetails.getUsername())) {
-                    UsernamePasswordAuthenticationToken authToken =
-                            new UsernamePasswordAuthenticationToken(
-                                    userDetails, null, userDetails.getAuthorities());
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities());
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
@@ -79,7 +80,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     // Optional: define which paths require auth
     private boolean requiresAuth(HttpServletRequest request) {
         String path = request.getRequestURI();
-        return !path.startsWith("/api/v1/auth")
+        return !path.startsWith("/api/v1/auth/login")
+                && !path.startsWith("/api/v1/register")
                 && !path.startsWith("/swagger")
                 && !path.startsWith("/v3/api-docs")
                 && !path.startsWith("/h2-console")
