@@ -19,8 +19,8 @@
 
 | Layer       | Technology               |
 | ----------- | ------------------------ |
-| Backend API | ASP.NET Core Web API     |
-| Database    | SQL Server               |
+| Backend API | Spring Boot              |
+| Database    | PostgresSQL              |
 | Frontend    | Next.js (planned)        |
 | Mobile App  | React Native (planned)   |
 | Auth        | JWT-based authentication |
