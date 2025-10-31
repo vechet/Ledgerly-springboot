@@ -35,5 +35,12 @@ public class GlobalExceptionHandler {
         return ApiResponse.failure(404, message);
     }
 
+    // // You can add a generic handler for other unexpected errors
+    // @ExceptionHandler(Exception.class)
+    // public ApiResponse<String> handleGenericException(Exception ex) {
+    //     // Log the full exception
+    //     // e.g., log.error("An unexpected error occurred", ex);
+    //     return ApiResponse.failure(500, "An internal server error occurred");
+    // }
 }
 

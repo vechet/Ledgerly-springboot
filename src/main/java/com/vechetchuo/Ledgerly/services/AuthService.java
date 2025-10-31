@@ -57,6 +57,12 @@ public class AuthService {
                 return ApiResponse.failure(ApiResponseStatus.DUPLICATION_USERNAME);
             }
 
+            // check if duplicate email
+            if (userRepository.existsByEmail(req.getEmail())) {
+                logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.DUPLICATION_EMAIL));
+                return ApiResponse.failure(ApiResponseStatus.DUPLICATION_EMAIL);
+            }
+
             // mapping dto to entity and add new user
             var newUser = mapper.toCreateEntity(req);
             newUser.setPassword(passwordEncoder.encode(req.getPassword()));

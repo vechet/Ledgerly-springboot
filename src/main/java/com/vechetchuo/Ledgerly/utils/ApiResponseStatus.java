@@ -12,6 +12,7 @@ public enum ApiResponseStatus {
     USER_NOT_FOUND(404, "User not found"),
     UNAUTHORIZED(401, "Unauthorized"),
     DUPLICATION_USERNAME(409, "Duplicate username"),
+    DUPLICATION_EMAIL(410, "Duplicate email"),
     FORBIDDEN(403, "Forbidden"),
     CANNOT_UPDATE_DEFAULT_CATEGORY(1002, "Cannot update default category"),
     ALREADY_DELETE(422, "Cannot update or delete record that already deleted."),
