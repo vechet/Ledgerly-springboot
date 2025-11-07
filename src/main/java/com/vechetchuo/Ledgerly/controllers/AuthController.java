@@ -28,6 +28,11 @@ public class AuthController {
         return authService.login(req);
     }
 
+    @PostMapping("/v1/auth/refresh")
+    public ApiResponse<RefreshTokenResponse> login(@Valid @RequestBody RefreshTokenRequest req){
+        return authService.refreshToken(req);
+    }
+
     @PostMapping("/v1/auth/forgot-password")
     public ApiResponse<ForgotPasswordResponse> forgotPassword(@Valid @RequestBody ForgotPasswordRequest req){
         return authService.forgotPassword(req);

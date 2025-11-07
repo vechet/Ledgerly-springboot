@@ -4,16 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginResponse {
+public class RefreshTokenResponse {
     private String accessToken;
     private long accessTokenExpiresIn;
     private String refreshToken;
     private long refreshTokenExpiresIn;
-    private UserInfoResponse user;
-
 }

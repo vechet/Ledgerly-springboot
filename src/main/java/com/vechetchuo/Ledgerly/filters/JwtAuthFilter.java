@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List; // 👈 Make sure to import java.util.List
 
 @Component
@@ -25,19 +26,18 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private CustomUserDetailsService userDetailsService;
 
     // ✅ Define all public paths. This MUST match the security config
-    private static final List<String> PUBLIC_PATHS = List.of(
+    private static final List<String> PUBLIC_PATHS = Arrays.asList(
             "/api/v1/auth/",
-            "/v3/api-docs",      // For the API definition
-            "/swagger-ui/",      // For the UI assets (CSS, JS)
-            "/swagger-ui.html",  // For the main page
+            "/v3/api-docs", // For the API definition
+            "/swagger-ui/", // For the UI assets (CSS, JS)
+            "/swagger-ui.html", // For the main page
             "/h2-console/",
-            "/reset-password"
-    );
+            "/reset-password");
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain)
+            HttpServletResponse response,
+            FilterChain filterChain)
             throws ServletException, IOException {
 
         // ✅ Check if the path is public FIRST
@@ -54,6 +54,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         String token = authHeader.substring(7);
+
+        if (jwtUtil.isRefreshToken(token)) {
+            handleStatus(response, HttpServletResponse.SC_UNAUTHORIZED,
+                    "Invalid use: refresh token can't be used to access APIs.");
+            return;
+        }
+
         try {
             String username = jwtUtil.extractUsername(token);
 

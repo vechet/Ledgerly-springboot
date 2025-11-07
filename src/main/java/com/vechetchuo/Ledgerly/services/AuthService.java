@@ -6,6 +6,7 @@ import com.vechetchuo.Ledgerly.models.domains.*;
 import com.vechetchuo.Ledgerly.models.dtos.auth.*;
 import com.vechetchuo.Ledgerly.repositories.*;
 import com.vechetchuo.Ledgerly.utils.*;
+import io.jsonwebtoken.JwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +14,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.Key;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -103,12 +102,15 @@ public class AuthService {
             // Generate token using authenticated user
             var user = userRepository.findByUsername(req.getUsername())
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-            var jwtToken = jwtUtil.generateToken(user);
+            var jwtAccessToken = jwtUtil.generateAccessToken(user);
+            var jwtRefreshToken = jwtUtil.generateRefreshToken(user);
 
             // Response
             var res = new LoginResponse();
-            res.setToken(jwtToken.getToken());
-            res.setExpiresIn(jwtToken.getExpiresIn());
+            res.setAccessToken(jwtAccessToken.getToken());
+            res.setAccessTokenExpiresIn(jwtAccessToken.getExpiresIn());
+            res.setRefreshToken(jwtRefreshToken.getToken());
+            res.setRefreshTokenExpiresIn(jwtRefreshToken.getExpiresIn());
 
             var userInfoResponse = new UserInfoResponse();
             userInfoResponse.setId(user.getId());
@@ -146,6 +148,41 @@ public class AuthService {
         } catch (Exception ex) {
             logger.info("Unexpected error during login", ex);
             return ApiResponse.failure(ApiResponseStatus.INTERNAL_ERROR, "Something went wrong");
+        }
+    }
+
+    public ApiResponse<RefreshTokenResponse> refreshToken(RefreshTokenRequest req) {
+        try {
+            String refreshToken = req.getRefreshToken();
+
+            // check invalid token type
+            if (!jwtUtil.isRefreshToken(refreshToken)) {
+                logger.info(LoggerUtil.formatMessage(req, ApiResponseStatus.INVALID_TOKEN_TYPE));
+                return ApiResponse.failure(ApiResponseStatus.INVALID_TOKEN_TYPE);
+            }
+
+            String userId = jwtUtil.extractUserId(refreshToken);
+
+            // Generate token using authenticated user
+            var user = userRepository.findById(userId)
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            var jwtAccessToken = jwtUtil.generateAccessToken(user);
+            var jwtRefreshToken = jwtUtil.generateRefreshToken(user);
+
+            // Response
+            var res = new RefreshTokenResponse();
+            res.setAccessToken(jwtAccessToken.getToken());
+            res.setAccessTokenExpiresIn(jwtAccessToken.getExpiresIn());
+            res.setRefreshToken(jwtRefreshToken.getToken());
+            res.setRefreshTokenExpiresIn(jwtRefreshToken.getExpiresIn());
+
+            return ApiResponse.success(res);
+        } catch (JwtException ex) {
+            logger.info("Invalid or expired refresh token", ex);
+            return ApiResponse.failure(ApiResponseStatus.INVALID_OR_EXPIRED_REFRESH_TOKEN);
+        } catch (Exception ex) {
+            logger.info("Unexpected error during login", ex);
+            return ApiResponse.failure(ApiResponseStatus.INTERNAL_ERROR);
         }
     }
 

@@ -10,27 +10,52 @@ import java.util.Date;
 @Component
 public class JwtExpirationUtil {
 
-    @Value("${jwt.token_expiration_type}")
-    private String tokenExpirationType;
+    @Value("${jwt.access_token_expiration_type}")
+    private String accessTokenExpirationType;
 
-    @Value("${jwt.token_expiration}")
-    private int tokenExpiration;
+    @Value("${jwt.access_token_expiration}")
+    private int accessTokenExpiration;
+
+    @Value("${jwt.refresh_token_expiration_type}")
+    private String refreshTokenExpirationType;
+
+    @Value("${jwt.refresh_token_expiration}")
+    private int refreshTokenExpiration;
 
     public Date getTokenExpiration() {
         Instant now = Instant.now();
 
-        switch (tokenExpirationType.toLowerCase()) {
+        switch (accessTokenExpirationType.toLowerCase()) {
             case "s":
-                return Date.from(now.plus(tokenExpiration, ChronoUnit.SECONDS));
+                return Date.from(now.plus(accessTokenExpiration, ChronoUnit.SECONDS));
             case "m":
-                return Date.from(now.plus(tokenExpiration, ChronoUnit.MINUTES));
+                return Date.from(now.plus(accessTokenExpiration, ChronoUnit.MINUTES));
             case "h":
-                return Date.from(now.plus(tokenExpiration, ChronoUnit.HOURS));
+                return Date.from(now.plus(accessTokenExpiration, ChronoUnit.HOURS));
             case "d":
-                return Date.from(now.plus(tokenExpiration, ChronoUnit.DAYS));
+                return Date.from(now.plus(accessTokenExpiration, ChronoUnit.DAYS));
             default:
                 throw new IllegalArgumentException(
                         "Invalid Jwt.accessTokenExpirationType. Use s, m, h, or d."
+                );
+        }
+    }
+
+    public Date getRefreshTokenExpiration() {
+        Instant now = Instant.now();
+
+        switch (refreshTokenExpirationType.toLowerCase()) {
+            case "s":
+                return Date.from(now.plus(refreshTokenExpiration, ChronoUnit.SECONDS));
+            case "m":
+                return Date.from(now.plus(refreshTokenExpiration, ChronoUnit.MINUTES));
+            case "h":
+                return Date.from(now.plus(refreshTokenExpiration, ChronoUnit.HOURS));
+            case "d":
+                return Date.from(now.plus(refreshTokenExpiration, ChronoUnit.DAYS));
+            default:
+                throw new IllegalArgumentException(
+                        "Invalid Jwt.refreshTokenExpirationType. Use s, m, h, or d."
                 );
         }
     }
