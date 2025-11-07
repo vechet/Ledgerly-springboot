@@ -27,7 +27,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     // ✅ Define all public paths. This MUST match the security config
     private static final List<String> PUBLIC_PATHS = Arrays.asList(
-            "/api/v1/auth/",
+            "/api/v1/auth/login",
+            "/api/v1/auth/register",
+            "/api/v1/auth/refresh",
+            "/api/v1/auth/forgot-password",
+            "/api/v1/auth/reset-password",
             "/v3/api-docs", // For the API definition
             "/swagger-ui/", // For the UI assets (CSS, JS)
             "/swagger-ui.html", // For the main page
