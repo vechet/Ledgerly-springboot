@@ -71,7 +71,7 @@ public class CategoryService {
 
             var globalParam = globalParamRepository.findStatusByKeyNameAndType(EnumGlobalParam.Normal.getMessage(), EnumGlobalParamType.CategoryxxxStatus.getMessage());
             PageRequest pageRequest = PaginationUtil.toPageRequest(req);
-            Page<Category> categoryPage = categoryRepository.findDynamic(req.getFilter().getSearch(), currentUser, globalParam, pageRequest);
+            Page<Category> categoryPage = categoryRepository.findDynamic(req.getFilter().getSearch(), currentUser, globalParam, true, pageRequest);
             var categories = categoryPage.getContent().stream().map(mapper::toGetsDto).collect(Collectors.toList());
             var pageInfo = new PageInfo(req.getPage(), req.getPageSize(), categoryPage.getTotalPages(), categoryPage.getTotalElements());
 
