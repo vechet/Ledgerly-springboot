@@ -2,7 +2,7 @@ name: Build and Deploy Ledgerly
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build-and-deploy:
@@ -15,41 +15,62 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          distribution: "temurin"
+          java-version: "17"
 
       - name: Build Spring Boot JAR
         run: mvn clean package -DskipTests
 
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
+      - name: Copy JAR to VPS
+        uses: appleboy/scp-action@v0.1.5
         with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: "target/*.jar"
+          target: "/root/Project"
 
-      - name: Build and Push Docker Image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ledgerly:latest
-
-      - name: Build and Push Docker Image with Retry
-        run: |
-          for i in {1..3}; do
-            docker buildx build --push --tag ${{ secrets.DOCKER_HUB_USERNAME }}/ledgerly:latest . && break
-            echo "Retrying in 10s..."
-            sleep 10
-          done
-
-      - name: Deploy to VPS via SSH
+      - name: Build & restart Docker on VPS
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            cd /root
-            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/ledgerly:latest
+            cd /root/Project
+            docker build -t ledgerly:latest .
             docker compose --env-file .env down
             docker compose --env-file .env up -d
+
+#      - name: Log in to Docker Hub
+#        uses: docker/login-action@v2
+#        with:
+#          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+#          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+#
+#      - name: Build and Push Docker Image
+#        uses: docker/build-push-action@v5
+#        with:
+#          context: .
+#          push: true
+#          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ledgerly:latest
+#
+#      - name: Build and Push Docker Image with Retry
+#        run: |
+#          for i in {1..3}; do
+#            docker buildx build --push --tag ${{ secrets.DOCKER_HUB_USERNAME }}/ledgerly:latest . && break
+#            echo "Retrying in 10s..."
+#            sleep 10
+#          done
+#
+#      - name: Deploy to VPS via SSH
+#        uses: appleboy/ssh-action@v0.1.10
+#        with:
+#          host: ${{ secrets.VPS_HOST }}
+#          username: ${{ secrets.VPS_USER }}
+#          key: ${{ secrets.VPS_SSH_KEY }}
+#          script: |
+#            cd /root
+#            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/ledgerly:latest
+#            docker compose --env-file .env down
+#            docker compose --env-file .env up -d
