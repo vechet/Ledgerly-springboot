@@ -5,6 +5,7 @@ import com.vechetchuo.Ledgerly.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -58,6 +59,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults()) // ✅ enable CORS using the bean above
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // allow preflight
                         // ✅ Allow all whitelisted paths
                         .requestMatchers(PUBLIC_WHITELIST).permitAll()
                         // Everything else requires auth
@@ -88,24 +90,32 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // Allow your frontend origin
+        // Allow your frontend origins (dev + prod)
         configuration.setAllowedOrigins(List.of(
                 "http://127.0.0.1:5500",
-                "http://localhost:3000"
+                "http://localhost:3000",
+                "https://yourfrontend.com" // production domain
         ));
 
-        // Allow GET and POST only
-        configuration.setAllowedMethods(List.of("POST", "OPTIONS"));
+        // Allow methods including OPTIONS (needed for preflight)
+        configuration.setAllowedMethods(List.of("GET", "POST", "OPTIONS"));
 
-        // Allow JSON and Authorization headers
-        configuration.setAllowedHeaders(List.of("Content-Type", "Authorization"));
+        // Allow headers commonly used in frontend requests
+        configuration.setAllowedHeaders(List.of(
+                "Content-Type",
+                "Authorization",
+                "Accept",
+                "Origin",
+                "X-Requested-With"
+        ));
 
-        // Allow credentials if needed
+        // Allow credentials (Bearer tokens, cookies)
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
 
 }
