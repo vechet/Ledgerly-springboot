@@ -90,32 +90,21 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // Allow your frontend origins (dev + prod)
-        configuration.setAllowedOrigins(List.of(
-                "http://127.0.0.1:5500",
-                "http://localhost:3000",
-                "https://yourfrontend.com" // production domain
-        ));
+        // Allow all origins (⚠️ only for testing!)
+        configuration.addAllowedOriginPattern("*");
 
-        // Allow methods including OPTIONS (needed for preflight)
-        configuration.setAllowedMethods(List.of("GET", "POST", "OPTIONS"));
+        // Allow all methods
+        configuration.addAllowedMethod("*");
 
-        // Allow headers commonly used in frontend requests
-        configuration.setAllowedHeaders(List.of(
-                "Content-Type",
-                "Authorization",
-                "Accept",
-                "Origin",
-                "X-Requested-With"
-        ));
+        // Allow all headers
+        configuration.addAllowedHeader("*");
 
-        // Allow credentials (Bearer tokens, cookies)
+        // Allow credentials if needed
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
 
 }
