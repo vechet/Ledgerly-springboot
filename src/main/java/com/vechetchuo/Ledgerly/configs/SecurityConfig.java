@@ -23,6 +23,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.List;
+
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
@@ -87,17 +89,16 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         // Allow your frontend origin
-//        configuration.addAllowedOrigin("http://127.0.0.1:5500"); // local HTML testing
-//        configuration.addAllowedOrigin("http://localhost:3000"); // React/Flutter web dev
-        configuration.addAllowedOriginPattern("*"); // optional: allow all for testing
+        configuration.setAllowedOrigins(List.of(
+                "http://127.0.0.1:5500",
+                "http://localhost:3000"
+        ));
 
         // Allow GET and POST only
-//        configuration.addAllowedMethod("GET");
-        configuration.addAllowedMethod("POST");
+        configuration.setAllowedMethods(List.of("POST", "OPTIONS"));
 
         // Allow JSON and Authorization headers
-        configuration.addAllowedHeader("Content-Type");
-        configuration.addAllowedHeader("Authorization");
+        configuration.setAllowedHeaders(List.of("Content-Type", "Authorization"));
 
         // Allow credentials if needed
         configuration.setAllowCredentials(true);
